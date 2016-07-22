@@ -13,4 +13,5 @@ all:
 	$(ENV) lb build
 
 install:
-	echo foo
+	echo "I: in install target"
+	mv binary/boot/filesystem.dir/* $(DESTDIR)/
