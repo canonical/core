@@ -1,7 +1,7 @@
 name: ubuntu-core
 version: 16.04.1
-summary: The Ubuntu Core snap
-description: All the root your filesystem needs
+summary: snapd runtime environment
+description: The core runtime environment for snapd
 confinement: strict
 type: os
 
