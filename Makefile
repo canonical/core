@@ -14,4 +14,4 @@ all:
 
 install:
 	echo "I: in install target"
-	mv binary/boot/filesystem.dir $(DESTDIR)
+	mv binary/boot/filesystem.dir/* $(DESTDIR)/

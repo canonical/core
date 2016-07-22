@@ -6,8 +6,10 @@ confinement: strict
 type: os
 
 parts:
-  livebuild:
-    source: .
-    plugin: make
-    build-packages:
-      - livecd-rootfs
+    #   livebuild:
+    #  source: .
+    #  plugin: make
+    #  build-packages:
+    #    - livecd-rootfs
+    nil:
+        plugin: nil
