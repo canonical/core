@@ -3,6 +3,7 @@ version: 16.04.1
 summary: The Ubuntu Core snap
 description: All the root your filesystem needs
 confinement: strict
+type: os
 
 parts:
   livebuild:
