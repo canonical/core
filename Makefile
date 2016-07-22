@@ -14,4 +14,5 @@ all:
 
 install:
 	echo "I: in install target"
+	rm -rf binary/boot/filesystem.dir/meta
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
