@@ -9,6 +9,4 @@ parts:
     source: .
     plugin: make
     build-packages:
-      - live-build
       - livecd-rootfs
-      - coreutils
