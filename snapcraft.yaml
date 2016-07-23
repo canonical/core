@@ -1,9 +1,10 @@
 name: ubuntu-core
 version: 16.04.1
 summary: snapd runtime environment
+architectures: [ amd64, armhf, arm64, i386, ppc64el, s390x ]
+type: os
 description: The core runtime environment for snapd
 confinement: strict
-type: os
 
 parts:
   livebuild:
