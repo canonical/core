@@ -15,6 +15,8 @@ all:
 install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
+	ls -l
+	ls -l binary
 	rm -rf binary/boot/filesystem.dir/meta
 	find binary/boot/filesystem.dir/ \! -user root -print
 	cp -a binary/boot/filesystem.dir/* $(DESTDIR)/
