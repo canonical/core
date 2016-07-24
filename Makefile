@@ -24,7 +24,7 @@ install:
 	find binary/boot/filesystem.dir/ \! -user root -print
 	echo "I: listing all non root group owned files"
 	find binary/boot/filesystem.dir/ \! -group root -print
-	cp -a binary/boot/filesystem.dir/* $(DESTDIR)/
+	zcat livecd.ubuntu-core.rootfs.tar.gz | tar --extract --numeric-owner --touch --directory $(DESTDIR)
 	echo "I: checking after copy"
 	find $(DESTDIR)/ \! -user root -print
 	find $(DESTDIR)/ \! -group root -print
