@@ -16,4 +16,4 @@ install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
 	rm -rf binary/boot/filesystem.dir/meta
-	mv binary/boot/filesystem.dir/* $(DESTDIR)/
+	cp -a binary/boot/filesystem.dir/* $(DESTDIR)/
