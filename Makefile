@@ -14,6 +14,6 @@ all:
 
 install:
 	echo "I: in install target"
-	zcat livecd.ubuntu-core.rootfs.tar.gz | tar --extract --numeric-owner --touch --directory $(DESTDIR)
 	# workaround for http://pad.lv/1605622
-	rm -rf $(DESTDIR)/meta
+	rm -rf binary/boot/filesystem.dir/meta
+	mv binary/boot/filesystem.dir/* $(DESTDIR)/
