@@ -1,0 +1,119 @@
+#! /usr/bin/python
+
+import os
+import sys
+import time
+import smtplib
+
+from datetime import datetime
+from os.path import basename
+from launchpadlib.launchpad import Launchpad
+from email.mime.text import MIMEText
+
+# where failure mails go
+mailreceivers = ['ogra@ubuntu.com', 'mvo@ubuntu.com',
+                 'steve.langasek@ubuntu.com',
+                 'adconrad@ubuntu.com']
+
+# basic data
+arches = ['amd64', 'i386', 'armhf', 'arm64', 'ppc64el']
+series = 'xenial'
+
+# basic paths
+home = os.getenv("HOME")
+workdir = home+"/ubuntu-core-builds"
+
+# we need to store credentials once for cronned builds
+cachedir = workdir+"/cache"
+creds = workdir+"/credentials"
+
+# make sure we dont clash with an older build attempt
+pid = str(os.getpid())
+pidfile = workdir+"/build.pid"
+if os.path.isfile(pidfile):
+    print "A pid file %s already exists, it seems like" % pidfile
+    print "there is already a build-ubuntu-core running."
+    print "exiting !"
+    sys.exit()
+file(pidfile, 'w').write(pid)
+
+# log in
+launchpad = Launchpad.login_with('Ubuntu Core Builds',
+                                 'production', cachedir,
+                                 credentials_file=creds,
+                                 version='devel')
+
+# get snappy-dev team data and ppa
+snappydev = launchpad.people['snappy-dev']
+imageppa = snappydev.getPPAByName(name='image')
+
+# get snap
+ubuntucore = launchpad.snaps.getByName(name='ubuntu-core',
+                                       owner=snappydev)
+
+# get distro info
+ubuntu = launchpad.distributions['ubuntu']
+release = ubuntu.getSeries(name_or_version=series)
+
+# print a stamp
+stamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+print("Trying to trigger builds at: {}".format(stamp))
+
+# loop over arches and trigger builds
+mybuilds = []
+for buildarch in arches:
+    arch = release.getDistroArchSeries(archtag=buildarch)
+    request = ubuntucore.requestBuild(archive=imageppa,
+                                      distro_arch_series=arch,
+                                      pocket='Updates')
+    buildid = str(request).rsplit('/', 1)[-1]
+    mybuilds.append(buildid)
+    print("Arch: {} is building under: {}".format(buildarch,
+                                                  request))
+
+# check the status each minute til all builds have finished
+failures = []
+while len(mybuilds):
+    for build in mybuilds:
+        response = ubuntucore.getBuildSummariesForSnapBuildIds(snap_build_ids=[build])
+        status = response[build]['status']
+        if status == "FULLYBUILT":
+            mybuilds.remove(build)
+            continue
+        elif status == "FAILEDTOBUILD":
+            failures.append(build)
+            mybuilds.remove(build)
+            continue
+        elif status == "CANCELLED":
+            mybuilds.remove(build)
+            continue
+    time.sleep(60)
+
+# if we had failures, print them and send mails
+if len(failures):
+    for failure in failures:
+        response = ubuntucore.getBuildSummariesForSnapBuildIds(snap_build_ids=[failure])
+        buildlog = response[build]['build_log_url']
+        if buildlog != 'None':
+            print(buildlog)
+            arch = str(buildlog).split('_')[4]
+        print("ubuntu-core snap {} build at {} failed for id: {} log: {}".format(arch, stamp, failure, buildlog))
+
+        # send failure mails to defined recipients
+        sender = 'ogra@canonical.com'
+        mailtext = "ubuntu-core {} snap\nBuild requested at {}\nFailed for id: {}\nLink to build log: {}".format(arch, stamp, failure, buildlog)
+
+        message = MIMEText(mailtext)
+        message['Subject'] = '%s ubuntu-core snap failed to build !' % arch
+        message['From'] = 'Snap Auto Builder <%s>' % sender
+        message['To'] = ", ".join(mailreceivers)
+        try:
+           smtpObj = smtplib.SMTP('localhost')
+           smtpObj.sendmail(sender, mailreceivers, message.as_string())
+           print ("Successfully sent failure email to {}".format(mailreceivers))
+        except Exception:
+           print ("Error: unable to send failure email")
+
+# tell the log we are done and remove pid file
+print("done")
+os.unlink(pidfile)

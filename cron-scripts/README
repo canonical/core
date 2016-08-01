@@ -1,0 +1,13 @@
+This script triggers a build of the official Ubuntu Core snap package at:
+
+https://code.launchpad.net/~snappy-dev/+snap/ubuntu-core
+
+If you have a personal branch of lp:ubuntu-core-snap (using your own PPAs
+during build for injecting test packages etc...), then please adjust the
+variables at the top of lp-build-ubuntu-core to match your needed targets.
+(do not forget to fix the mail receipients too)
+
+There is an example crontab to show how the script should be invoked by cron
+
+NOTE: you need to run this script at least once by hand to have launchpad
+      create the necessary credentials for automated execution.
