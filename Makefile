@@ -20,4 +20,6 @@ install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
 	rm -rf binary/boot/filesystem.dir/meta
+	# make sure /tmp in the snap is mode 1777
+	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
