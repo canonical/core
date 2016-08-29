@@ -2,6 +2,10 @@ DPKG_ARCH := $(shell dpkg --print-architecture)
 RELEASE := $(shell lsb_release -c -s)
 ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH) PROPOSED=1
 
+# workaround for LP: #1588336, needs to be bumped along
+# with the snapcraft.yaml version for now
+VERSION := 16.04.1
+
 #ifneq ($(shell grep $(RELEASE)-proposed /etc/apt/sources.list),)
 #ENV += PROPOSED=1
 #endif
@@ -23,4 +27,5 @@ install:
 	# make sure /tmp in the snap is mode 1777
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
-	find . -name '*.manifest'
+	mv livecd.ubuntu-core.manifest ubuntu-core_$(VERSION)_$(ARCH).manifest
+	ls -l
