@@ -28,4 +28,4 @@ install:
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	mv livecd.ubuntu-core.manifest ubuntu-core_$(VERSION)_$(ARCH).manifest
-	ls -l
+	ls -l /build/ubuntu-core
