@@ -4,7 +4,7 @@ summary: snapd runtime environment
 description: The core runtime environment for snapd
 confinement: strict
 type: os
-grade: devel
+grade: stable
 
 parts:
   livebuild:
