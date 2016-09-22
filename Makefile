@@ -26,8 +26,11 @@ install:
 	rm -rf binary/boot/filesystem.dir/meta
 	# make sure /tmp in the snap is mode 1777
 	chmod 1777 binary/boot/filesystem.dir/tmp
+	# debug ...
+	echo "checking for .pyc files"
+	find binary/boot/filesystem.dir/usr/lib -name *.pyc
+	echo "done checking for .pyc files"
+	# end debug ...
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	mv livecd.ubuntu-core.manifest /build/ubuntu-core/ubuntu-core_$(VERSION)_$(DPKG_ARCH).manifest
 	ls -l /build/ubuntu-core
-	echo "checking /usr/lib/python3.5/__pycache__/"
-	find $(DESTDIR)/usr/lib/python3.5/__pycache__/
