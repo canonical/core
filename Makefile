@@ -29,3 +29,5 @@ install:
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	mv livecd.ubuntu-core.manifest /build/ubuntu-core/ubuntu-core_$(VERSION)_$(DPKG_ARCH).manifest
 	ls -l /build/ubuntu-core
+	echo "checking /usr/lib/python3.5/__pycache__/"
+	find $(DESTDIR)/usr/lib/python3.5/__pycache__/
