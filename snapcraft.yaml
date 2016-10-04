@@ -1,4 +1,4 @@
-name: ubuntu-core
+name: core
 version: 16.04.1
 summary: snapd runtime environment
 description: The core runtime environment for snapd
