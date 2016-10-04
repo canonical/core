@@ -27,5 +27,5 @@ install:
 	# make sure /tmp in the snap is mode 1777
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
-	mv livecd.ubuntu-core.manifest /build/ubuntu-core/core_$(VERSION)_$(DPKG_ARCH).manifest
-	ls -l /build/ubuntu-core
+	mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest
+	ls -l /build/core
