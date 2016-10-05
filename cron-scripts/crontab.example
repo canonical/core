@@ -1,1 +1,1 @@
-30 4 * * * /home/ogra/ubuntu-core-builds/lp-build-ubuntu-core >>/home/ogra/ubuntu-core-builds/build.log 2>&1
+45 4 * * * /home/ogra/core-builds/lp-build-core >>/home/ogra/core-builds/build.log 2>&1
