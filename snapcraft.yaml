@@ -7,6 +7,12 @@ type: os
 grade: stable
 
 parts:
+  hooks:
+    plugin: dump
+    source: hooks
+    organize:
+      configure: meta/hooks/configure
+
   livebuild:
     source: .
     plugin: make

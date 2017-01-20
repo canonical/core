@@ -1,0 +1,25 @@
+#!/bin/sh
+
+switch_service_sshd() {
+	case "$1" in
+		enabled)
+			rm /etc/ssh/sshd_not_to_be_run
+			systemctl restart sshd
+			;;
+		disabled)
+			touch /etc/ssh/sshd_not_to_be_run
+			systemctl restart sshd
+			;;
+		*)
+			echo "ERROR: Invalid value '$1' provided for option service.sshd"
+			exit 1
+	esac
+}
+
+value=`snapctl get service.sshd`
+if [ -n "$value" ]; then
+
+else
+	snapctl set service.sshd=enabled
+	switch_service_sshd enabled
+fi
