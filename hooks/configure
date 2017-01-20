@@ -17,7 +17,7 @@
 switch_service_sshd() {
 	case "$1" in
 		enabled)
-			rm /etc/ssh/sshd_not_to_be_run
+			rm -f /etc/ssh/sshd_not_to_be_run
 			systemctl start sshd
 			;;
 		disabled)
