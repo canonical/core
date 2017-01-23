@@ -15,14 +15,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 switch_service_sshd() {
+	marker_path=/etc/ssh/sshd_not_to_be_run
 	case "$1" in
 		enabled)
-			rm -f /etc/ssh/sshd_not_to_be_run
-			systemctl start sshd
+			if [ -e $marker_path ]; then
+				rm -f $marker_path
+				systemctl start sshd
+			fi
 			;;
 		disabled)
-			touch /etc/ssh/sshd_not_to_be_run
-			systemctl stop sshd
+			if [ ! -e $marker_path ]; then
+				touch $marker_path
+				systemctl stop sshd
+			fi
 			;;
 		*)
 			echo "ERROR: Invalid value '$1' provided for option service.sshd"
