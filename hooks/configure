@@ -31,13 +31,13 @@ stop_service() {
 switch_service_sshd() {
 	marker_path=/etc/ssh/sshd_not_to_be_run
 	case "$1" in
-		true)
+		false)
 			if [ -e $marker_path ]; then
 				rm -f $marker_path
 				start_service sshd
 			fi
 			;;
-		false)
+		true)
 			if [ ! -e $marker_path ]; then
 				touch $marker_path
 				stop_service sshd
