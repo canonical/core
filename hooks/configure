@@ -14,31 +14,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+start_service() {
+	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
+		/org/freedesktop/systemd1 \
+		org.freedesktop.systemd1.Manager.StartUnit \
+		string:"$1.service" string:"replace"
+}
+
+stop_service() {
+	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
+		/org/freedesktop/systemd1 \
+		org.freedesktop.systemd1.Manager.StopUnit \
+		string:"$1.service" string:"replace"
+}
+
 switch_service_sshd() {
 	marker_path=/etc/ssh/sshd_not_to_be_run
 	case "$1" in
-		enabled)
+		true)
 			if [ -e $marker_path ]; then
 				rm -f $marker_path
-				systemctl start sshd
+				start_service sshd
 			fi
 			;;
-		disabled)
+		false)
 			if [ ! -e $marker_path ]; then
 				touch $marker_path
-				systemctl stop sshd
+				stop_service sshd
 			fi
 			;;
 		*)
-			echo "ERROR: Invalid value '$1' provided for option service.sshd"
+			echo "ERROR: Invalid value '$1' provided for option service.sshd.disabled"
 			exit 1
 	esac
 }
 
-value=`snapctl get service.sshd`
+value=`snapctl get service.sshd.disabled`
 if [ -n "$value" ]; then
 	switch_service_sshd $value
 else
-	snapctl set service.sshd=enabled
-	switch_service_sshd enabled
+	snapctl set service.sshd.disabled=false
+	switch_service_sshd false
 fi
