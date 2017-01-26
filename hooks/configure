@@ -20,12 +20,6 @@ wait_time=0.5
 # See https://www.freedesktop.org/wiki/Software/systemd/dbus/ for
 # details about the systemd dbus calls.
 
-is_ssh_unit_active() {
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1/unit/ssh_2eservice org.freedesktop.DBus.Properties.Get \
-		string:"org.freedesktop.systemd1.Unit" string:"ActiveState" | grep active
-}
-
 is_ssh_unit_enabled() {
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1/unit/ssh_2eservice org.freedesktop.DBus.Properties.Get \
@@ -54,20 +48,20 @@ enable_and_start_ssh_service() {
 stop_and_disable_ssh_service() {
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.StopUnit \
-		string:"ssh.service" string:"replace"
+		org.freedesktop.systemd1.Manager.DisableUnitFiles \
+			array:string:"ssh.service" boolean:false
 
 	# Wait a few moments until the service is properly disabled
 	n=0
-	while $n -lt $wait_attempts && is_ssh_unit_active ; do
+	while $n -lt $wait_attempts && is_ssh_unit_enabled ; do
 		sleep $wait_time
 		n=$((n+1))
 	done
 
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.DisableUnitFiles \
-			array:string:"ssh.service" boolean:false
+		org.freedesktop.systemd1.Manager.StopUnit \
+		string:"ssh.service" string:"replace"
 }
 
 switch_service_sshd() {
