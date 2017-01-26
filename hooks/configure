@@ -34,7 +34,7 @@ enable_and_start_ssh_service() {
 
 	# Wait a few moments until the service is properly disabled
 	n=0
-	while $n -lt 10 $wait_attempts ! is_ssh_unit_enabled ; do
+	while $n -lt 10 $wait_attempts && ! is_ssh_unit_enabled ; do
 		sleep $wait_time
 		n=$((n+1))
 	done
