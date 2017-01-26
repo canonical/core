@@ -14,33 +14,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-start_service() {
+# See https://www.freedesktop.org/wiki/Software/systemd/dbus/ for
+# details about the systemd dbus calls.
+
+enable_and_start_service() {
+	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
+		/org/freedesktop/systemd1 \
+		org.freedesktop.systemd1.Manager.EnableUnitFiles \
+			array:string:"$1.service" b:false b:false
+
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1 \
 		org.freedesktop.systemd1.Manager.StartUnit \
 		string:"$1.service" string:"replace"
 }
 
-stop_service() {
+stop_and_disable_service() {
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1 \
 		org.freedesktop.systemd1.Manager.StopUnit \
 		string:"$1.service" string:"replace"
+
+	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
+		/org/freedesktop/systemd1 \
+		org.freedesktop.systemd1.Manager.DisableUnitFiles \
+			array:string:"$1.service" b:false
+
 }
 
 switch_service_sshd() {
+	# The marker is not absolutely necessary but is the old way of
+	# disabling the sshd service. We will use both here, the systemd
+	# way and creating the marker which is checked by a ConditionPathExists
+	# in the ssh.service unit file.
 	marker_path=/etc/ssh/sshd_not_to_be_run
 	case "$1" in
 		false)
 			if [ -e $marker_path ]; then
 				rm -f $marker_path
-				start_service sshd
+				enable_and_start_service sshd
 			fi
 			;;
 		true)
 			if [ ! -e $marker_path ]; then
 				touch $marker_path
-				stop_service sshd
+				stop_and_disable_service sshd
 			fi
 			;;
 		*)
