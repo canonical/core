@@ -23,7 +23,7 @@ wait_time=0.5
 is_ssh_unit_enabled() {
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
 		/org/freedesktop/systemd1/unit/ssh_2eservice org.freedesktop.DBus.Properties.Get \
-		string:"org.freedesktop.systemd1.Unit" string:"UnitFileState" | grep enabled
+		string:"org.freedesktop.systemd1.Unit" string:"UnitFileState" | grep -q enabled
 }
 
 enable_and_start_ssh_service() {
@@ -34,7 +34,10 @@ enable_and_start_ssh_service() {
 
 	# Wait a few moments until the service is properly disabled
 	n=0
-	while $n -lt 10 $wait_attempts && ! is_ssh_unit_enabled ; do
+	while $n -lt 10 $wait_attempts ; do
+		if is_ssh_unit_enabled ; then
+			break
+		fi
 		sleep $wait_time
 		n=$((n+1))
 	done
@@ -53,7 +56,10 @@ stop_and_disable_ssh_service() {
 
 	# Wait a few moments until the service is properly disabled
 	n=0
-	while $n -lt $wait_attempts && is_ssh_unit_enabled ; do
+	while $n -lt $wait_attempts ; do
+		if ! is_ssh_unit_enabled ; then
+			break
+		fi
 		sleep $wait_time
 		n=$((n+1))
 	done
