@@ -42,7 +42,7 @@ enable_and_start_ssh_service() {
 	n=0
 	while $n -lt 10 $wait_attempts ! is_ssh_unit_enabled ; do
 		sleep $wait_time
-		let n=n+1
+		n=$((n+1))
 	done
 
 	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
