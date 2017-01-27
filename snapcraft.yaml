@@ -6,7 +6,18 @@ confinement: strict
 type: os
 grade: stable
 
+hooks:
+  configure:
+    plugs:
+      - core-support
+
 parts:
+  hooks:
+    plugin: dump
+    source: hooks
+    organize:
+      configure: meta/hooks/configure
+
   livebuild:
     source: .
     plugin: make
