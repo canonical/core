@@ -28,14 +28,16 @@ switch_service_ssh() {
 	esac
 }
 
-value=`snapctl get service.ssh.disable`
+value=$(snapctl get service.ssh.disable)
 if [ -n "$value" ]; then
 	switch_service_ssh $value
 else
 	# Check what the current state of the service is
 	value=false
-	if [ `systemctl is-enabled ssh.service` = enabled ]; then
-		value=true
+	current_status=`systemctl is-enabled ssh.service`
+	if [ "$current_status" = "disabled" ]; then
+		echo "Service disabled"
+		value=false
 	fi
 	snapctl set service.ssh.disable=$value
 	switch_service_ssh $value
