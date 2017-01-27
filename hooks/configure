@@ -14,85 +14,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-wait_attempts=10
-wait_time=0.5
-
-# See https://www.freedesktop.org/wiki/Software/systemd/dbus/ for
-# details about the systemd dbus calls.
-
-is_ssh_unit_enabled() {
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1/unit/ssh_2eservice org.freedesktop.DBus.Properties.Get \
-		string:"org.freedesktop.systemd1.Unit" string:"UnitFileState" | grep -q enabled
-}
-
-enable_and_start_ssh_service() {
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.EnableUnitFiles \
-			array:string:"ssh.service" boolean:false boolean:false
-
-	# Wait a few moments until the service is properly disabled
-	n=0
-	while [ $n -lt 10 $wait_attempts ] ; do
-		if is_ssh_unit_enabled ; then
-			break
-		fi
-		sleep $wait_time
-		n=$((n+1))
-	done
-
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.StartUnit \
-		string:"ssh.service" string:"replace"
-}
-
-stop_and_disable_ssh_service() {
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.DisableUnitFiles \
-			array:string:"ssh.service" boolean:false
-
-	# Wait a few moments until the service is properly disabled
-	n=0
-	while [ $n -lt $wait_attempts ] ; do
-		if ! is_ssh_unit_enabled ; then
-			break
-		fi
-		sleep $wait_time
-		n=$((n+1))
-	done
-
-	dbus-send --system --print-reply --dest=org.freedesktop.systemd1 \
-		/org/freedesktop/systemd1 \
-		org.freedesktop.systemd1.Manager.StopUnit \
-		string:"ssh.service" string:"replace"
-}
-
-switch_service_sshd() {
+switch_service_ssh() {
 	case "$1" in
 		false)
-			enable_and_start_ssh_service
+			systemctl enable --now ssh.service
 			;;
 		true)
-			stop_and_disable_ssh_service
+			systemctl disable --now ssh.service
 			;;
 		*)
-			echo "ERROR: Invalid value '$1' provided for option service.sshd.disabled"
+			echo "ERROR: Invalid value '$1' provided for option service.ssh.disable"
 			exit 1
 	esac
 }
 
-value=`snapctl get service.sshd.disabled`
+value=`snapctl get service.ssh.disable`
 if [ -n "$value" ]; then
-	switch_service_sshd $value
+	switch_service_ssh $value
 else
 	# Check what the current state of the service is
 	value=false
-	if ! is_ssh_unit_enabled ; then
+	if [ `systemctl is-enabled ssh.service` = enabled ]; then
 		value=true
 	fi
-	snapctl set service.sshd.disabled=$value
-	switch_service_sshd $value
+	snapctl set service.ssh.disable=$value
+	switch_service_ssh $value
 fi
