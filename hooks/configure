@@ -21,8 +21,9 @@ switch_service_ssh() {
 			# --now does start the unit so we have to check for that  case
 			# and explicitly start the unit.
 			if [ "$(systemctl is-enabled ssh.service)" = "disabled" ]; then
-				systemctl enable --now ssh.service
-			elif [ "$(systemctl is-active ssh.service)" = "inactive" ]; then
+				systemctl enable ssh.service
+			fi
+			if [ "$(systemctl is-active ssh.service)" = "inactive" ]; then
 				systemctl start ssh.service
 			fi
 			;;
@@ -42,13 +43,5 @@ switch_service_ssh() {
 
 value=$(snapctl get service.ssh.disable)
 if [ -n "$value" ]; then
-	switch_service_ssh $value
-else
-	# Check what the current state of the service is
-	value=false
-	if [ "$(systemctl is-enabled)" = "disabled" ]; then
-		value=true
-	fi
-	snapctl set service.ssh.disable=$value
 	switch_service_ssh $value
 fi
