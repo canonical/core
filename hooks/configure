@@ -20,7 +20,13 @@ switch_service_ssh() {
 			systemctl enable --now ssh.service
 			;;
 		true)
-			systemctl disable --now ssh.service
+			# NOTE: We can't do a 'systemctl disable --now ssh' here as
+			# systemctl then invokes compatiblity logic for sysv/upstart
+			# which tries to write into read-only filesystem locations
+			# As ssh.service has an Alias=sshd.service set we can do the
+			# following to steps which lead to the same result.
+			systemctl disable sshd.service
+			systemctl stop ssh.service
 			;;
 		*)
 			echo "ERROR: Invalid value '$1' provided for option service.ssh.disable"
