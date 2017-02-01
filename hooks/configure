@@ -14,17 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-switch_service_ssh() {
+# list services we can disable and enable
+SERVICES="ssh rsyslog"
+
+switch_service() {
 	case "$1" in
 		false)
 			# When the unit is already enabled but not active a call with
 			# --now does start the unit so we have to check for that  case
 			# and explicitly start the unit.
-			if [ "$(systemctl is-enabled ssh.service)" = "disabled" ]; then
-				systemctl enable ssh.service
+			if [ "$(systemctl is-enabled $2.service)" = "disabled" ]; then
+				systemctl enable $2.service
 			fi
-			if [ "$(systemctl is-active ssh.service)" = "inactive" ]; then
-				systemctl start ssh.service
+			if [ "$(systemctl is-active $2.service)" = "inactive" ]; then
+				systemctl start $2.service
 			fi
 			;;
 		true)
@@ -32,16 +35,18 @@ switch_service_ssh() {
 			# and fails with an error message. Because of that we're going
 			# in two steps here and disable first and then stopping the
 			# service unit.
-			systemctl disable ssh.service
-			systemctl stop ssh.service
+			systemctl disable $2.service
+			systemctl stop $2.service
 			;;
 		*)
-			echo "ERROR: Invalid value '$1' provided for option service.ssh.disable"
+			echo "ERROR: Invalid value '$1' provided for option service.$2.disable"
 			exit 1
 	esac
 }
 
-value=$(snapctl get service.ssh.disable)
-if [ -n "$value" ]; then
-	switch_service_ssh $value
-fi
+for service in $SERVICES; do
+    value=$(snapctl get service.$service.disable)
+    if [ -n "$value" ]; then
+        switch_service $value $service
+    fi
+done
