@@ -17,6 +17,22 @@
 # list of services we can disable and enable
 SERVICES="ssh rsyslog systemd-journald systemd-timesyncd"
 
+switch_handle_power_key() {
+    VALID_ACTIONS="ignore poweroff reboot halt kexec suspend hibernate hybrid-sleep lock"
+    path="/etc/systemd/logind.conf.d/core.conf"
+
+    if [ $1 in $VALID_ACTIONS]; then
+        cat <<EOF > $path
+[Login]
+HandlePowerKey=$1
+EOF
+    else
+        echo "WARNING: invalid action '$1' supplied for service.logind.power-key-action option"
+        exit 1
+    fi
+
+}
+
 switch_service() {
 	case "$1" in
 		false)
@@ -50,3 +66,8 @@ for service in $SERVICES; do
         switch_service $value $service
     fi
 done
+
+powerkey=$(snapctl get service.logind.power-key-action)
+if [ -n "$value" ]; then
+    switch_handle_power_key $value
+fi
