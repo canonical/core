@@ -19,7 +19,13 @@ SERVICES="ssh rsyslog systemd-journald systemd-timesyncd"
 
 switch_handle_power_key() {
     VALID_ACTIONS="ignore poweroff reboot halt kexec suspend hibernate hybrid-sleep lock"
-    path="/etc/systemd/logind.conf.d/core.conf"
+    dir="/etc/systemd/logind.conf.d"
+    path="$dir/core.conf"
+
+    # Make sure the conf dir exists
+    if [ ! -d $dir ]; then
+        mkdir -p $dir
+    fi
 
     if [ $1 in $VALID_ACTIONS]; then
         cat <<EOF > $path
@@ -68,6 +74,6 @@ for service in $SERVICES; do
 done
 
 powerkey=$(snapctl get service.logind.power-key-action)
-if [ -n "$value" ]; then
-    switch_handle_power_key $value
+if [ -n "$powerkey" ]; then
+    switch_handle_power_key $powerkey
 fi
