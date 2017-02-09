@@ -18,24 +18,25 @@
 SERVICES="ssh rsyslog systemd-journald systemd-timesyncd"
 
 switch_handle_power_key() {
-    VALID_ACTIONS="ignore poweroff reboot halt kexec suspend hibernate hybrid-sleep lock"
     dir="/etc/systemd/logind.conf.d"
-    path="$dir/core.conf"
+    path="$dir/00-snap-core.conf"
 
     # Make sure the conf dir exists
     if [ ! -d $dir ]; then
         mkdir -p $dir
     fi
 
-    if [ $1 in $VALID_ACTIONS]; then
-        cat <<EOF > $path
+    case $1 in
+        ignore|poweroff|reboot|halt|kexec|suspend|hibernate|hybrid-sleep|lock)
+            cat <<EOF > $path
 [Login]
 HandlePowerKey=$1
 EOF
-    else
-        echo "WARNING: invalid action '$1' supplied for service.logind.power-key-action option"
-        exit 1
-    fi
+            ;;
+        *)
+            echo "WARNING: invalid action '$1' supplied for service.logind.power-key-action option"
+            exit 1
+    esac
 
 }
 
