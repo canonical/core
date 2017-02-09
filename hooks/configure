@@ -36,6 +36,7 @@ EOF
         *)
             echo "WARNING: invalid action '$1' supplied for system.power-key-action option"
             exit 1
+            ;;
     esac
 
 }
