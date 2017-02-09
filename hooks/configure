@@ -34,7 +34,7 @@ HandlePowerKey=$1
 EOF
             ;;
         *)
-            echo "WARNING: invalid action '$1' supplied for service.logind.power-key-action option"
+            echo "WARNING: invalid action '$1' supplied for system.power-key-action option"
             exit 1
     esac
 
@@ -74,7 +74,7 @@ for service in $SERVICES; do
     fi
 done
 
-powerkey=$(snapctl get service.logind.power-key-action)
+powerkey=$(snapctl get system.power-key-action)
 if [ -n "$powerkey" ]; then
     switch_handle_power_key $powerkey
 fi
