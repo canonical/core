@@ -4,11 +4,7 @@ ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image 
 
 # workaround for LP: #1588336, needs to be bumped along
 # with the snapcraft.yaml version for now
-# VERSION := 16.04.1
-
-# try using the snapd version for the version string
-VERFILE := binary/boot/filesystem.dir/usr/lib/snapd/info
-VERSION := $(shell cat $(VERFILE)|sed 's/^V.*=//;s/.\{4\}.git.*$$//')
+VERSION := 16.04.1
 
 #ifneq ($(shell grep $(RELEASE)-proposed /etc/apt/sources.list),)
 #ENV += PROPOSED=1
@@ -32,5 +28,4 @@ install:
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest
-	sed -i "s/^version: .*/version: $(VERSION)/" /build/core/snapcraft.yaml
 	ls -l /build/core
