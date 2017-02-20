@@ -19,3 +19,15 @@ the `ENV` variable in the Makefile.
 If you do builds of this snap on launchpad, please make sure to build
 against xenial, with the `~snappy-dev/ubuntu/image` PPA as source archive
 and the `Updates` pocket as default pocket.
+
+## Launchpad Mirror and Automatic Builds.
+
+All commits from the master branch of https://github.com/snapcore/core are
+automatically mirrored by Launchpad to the https://launchpad.net/core-snap
+project.
+
+The master branch is automatically built from the launchpad mirror and
+published into the snap store to the edge channel.
+
+You can find build history and other controls here:
+https://code.launchpad.net/~snappy-dev/+snap/core/
