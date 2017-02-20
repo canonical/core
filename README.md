@@ -1,26 +1,25 @@
-# Core Snap
+# The core snap
 
-This repository contains the official Core snap. The core snap plays
+This repository contains the official core snap.
 
-## Reporting Issues
+## Reporting issues
 
 Please report all issues on the Launchpad project page
 https://bugs.launchpad.net/snapd/+filebug
 
 ## Building
 
-To build the gadget snap locally please use `sudo snapcraft`.
+To build the core snap locally please use `sudo snapcraft`.
 
-This snapcraft yaml allows you to create an Ubuntu Core os snap package
-To build your own against i.e. an additional PPA that provides changed
-packages you want to test, please edit the `EXTRA_PPAS` variable inside
-the `ENV` variable in the Makefile.
+An easy way to customize the content of the built snap is including additional
+PPAs with custom packages in the `EXTRA_PPAS` variable inside the Makefile's
+`ENV` variable.
 
-If you do builds of this snap on launchpad, please make sure to build
-against xenial, with the `~snappy-dev/ubuntu/image` PPA as source archive
-and the `Updates` pocket as default pocket.
+Launchpad builds should be done against xenial with the
+`~snappy-dev/ubuntu/image` PPA as source archive and `Updates` as the default
+pocket.
 
-## Launchpad Mirror and Automatic Builds.
+## Launchpad mirror and automatic builds.
 
 All commits from the master branch of https://github.com/snapcore/core are
 automatically mirrored by Launchpad to the https://launchpad.net/core-snap
