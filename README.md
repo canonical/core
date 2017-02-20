@@ -9,7 +9,7 @@ https://bugs.launchpad.net/snapd/+filebug
 
 ## Building
 
-To build the gadget snap locally please use `snapcraft`.
+To build the gadget snap locally please use `sudo snapcraft`.
 
 This snapcraft yaml allows you to create an Ubuntu Core os snap package
 To build your own against i.e. an additional PPA that provides changed
