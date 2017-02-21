@@ -4,7 +4,7 @@ ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image 
 
 # workaround for LP: #1588336, needs to be bumped along
 # with the snapcraft.yaml version for now
-VERSION := 16.04.1
+VERSION := 16-2
 
 #ifneq ($(shell grep $(RELEASE)-proposed /etc/apt/sources.list),)
 #ENV += PROPOSED=1
