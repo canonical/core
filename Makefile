@@ -27,5 +27,8 @@ install:
 	# make sure /tmp in the snap is mode 1777
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
-	mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest
-	ls -l /build/core
+	# only copy the manifest file if we are in a launchpad buildd
+	if [ -e /build ]; then \
+	  mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest; \
+	  ls -l /build/core; \
+	fi
