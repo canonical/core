@@ -28,7 +28,7 @@ install:
 	chmod 1777 binary/boot/filesystem.dir/tmp
 	mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	# only copy the manifest file if we are in a launchpad buildd
-	if [ -e /build ]; then \
+	if [ -e /build/core ]; then \
 	  mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest; \
 	  ls -l /build/core; \
 	fi
