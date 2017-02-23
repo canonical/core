@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+# bug #1637611
+echo "removing /etc/profile.d/Z99-cloud-locale-test.sh"
+[ -e /etc/profile.d/Z99-cloud-locale-test.sh ] && rm /etc/profile.d/Z99-cloud-locale-test.sh
