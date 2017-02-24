@@ -1,7 +1,0 @@
-#!/bin/sh -x
-
-# Change default cache partition (until LP: #1373467 is fixed).
-if [ -f /etc/system-image/client.ini ]; then
-	sed -ie 's!cache_partition: /android/cache/recovery!cache_partition: /userdata/cache!g' \
-			/etc/system-image/client.ini
-fi

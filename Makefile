@@ -18,12 +18,6 @@ all:
 	done
 	$(ENV) lb clean
 	$(ENV) lb config
-	# lb config copies the live-build/ubuntu-core/hooks/ from the
-	# livecd-rootfs package to config/hooks/, we want to maintain these
-	# hooks in the github tree instead, so remove the ones from the
-	# package and put ours in place instead.
-	rm -f config/hooks/*
-	cp -a live-build/hooks/* config/hooks/
 	$(ENV) lb build
 
 install:

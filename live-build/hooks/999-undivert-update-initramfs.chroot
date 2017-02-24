@@ -1,3 +1,0 @@
-#! /bin/sh
-rm -f /usr/sbin/update-initramfs
-dpkg-divert --quiet --remove --rename /usr/sbin/update-initramfs
