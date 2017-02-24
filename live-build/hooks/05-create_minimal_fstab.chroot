@@ -1,6 +1,0 @@
-#!/bin/sh -x
-
-cat >>/etc/fstab<<EOT
-# Minimal setup required for systemd to provide a r/w FS
-/dev/root	/	rootfs	defaults	0	0
-EOT
