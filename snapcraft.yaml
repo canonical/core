@@ -6,17 +6,21 @@ confinement: strict
 type: os
 grade: stable
 
-hooks:
-  configure:
-    plugs:
-      - core-support
+# disabled for a short time to figure out if the security profile
+# generation causes havoc with the ubuntu-core -> core transition
+#hooks:
+#  configure:
+#    plugs:
+#      - core-support
 
 parts:
-  hooks:
-    plugin: dump
-    source: hooks
-    organize:
-      configure: meta/hooks/configure
+  # disabled for a short time to figure out if the security profile
+  # generation causes havoc with the ubuntu-core -> core transition
+  #hooks:
+  #  plugin: dump
+  #  source: hooks
+  #  organize:
+  #    configure: meta/hooks/configure
 
   livebuild:
     source: .
