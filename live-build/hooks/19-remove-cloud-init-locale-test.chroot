@@ -3,5 +3,11 @@
 set -e
 
 # bug #1637611
-echo "removing /etc/profile.d/Z99-cloud-locale-test.sh"
-[ -e /etc/profile.d/Z99-cloud-locale-test.sh ] && rm /etc/profile.d/Z99-cloud-locale-test.sh
+echo "turning /etc/profile.d/Z99-cloud-locale-test.sh into a no-op"
+if [ -e /etc/profile.d/Z99-cloud-locale-test.sh ]; then
+	cat >/etc/profile.d/Z99-cloud-locale-test.sh<<EOF
+#!/bin/sh
+
+return 0
+EOF
+fi
