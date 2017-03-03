@@ -1,0 +1,7 @@
+#! /bin/sh -ex
+
+# we want the watchdog modules to load for now so that
+# a systemd watchdog setup can use the modules
+# (LP: #1647992)
+
+rm -f /etc/modprobe.d/blacklist-watchdog.conf
