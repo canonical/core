@@ -10,8 +10,10 @@ VERSION := 16-2
 #ENV += PROPOSED=1
 #endif
 
+check:
+	shellcheck live-build/hooks/*
 
-all:
+all: check
 	mkdir -p auto
 	for f in config build clean; \
 	    do ln -s /usr/share/livecd-rootfs/live-build/auto/$$f auto/; \
