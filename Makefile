@@ -11,7 +11,7 @@ VERSION := 16-2
 #endif
 
 check:
-	shellcheck live-build/hooks/*
+	shellcheck hooks/* live-build/hooks/*
 
 all: check
 	mkdir -p auto
