@@ -11,6 +11,7 @@ install:
   - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
   - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo chroot xenial-test-chroot apt-add-repository -y ppa:snappy-dev/image
+  - sudo chroot xenial-test-chroot apt update
   - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft
   - sudo chroot xenial-test-chroot mount /proc
   - sudo chroot xenial-test-chroot mount /sys
