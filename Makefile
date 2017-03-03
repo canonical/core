@@ -25,6 +25,11 @@ all: check
 	cp -a live-build/hooks/* config/hooks/
 	$(ENV) lb build
 
+check:
+	# exlucde "useless cat" from checks, while useless also makes
+	# some things more readable
+	shellcheck -e SC2002 hooks/* live-build/hooks/*
+
 install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
