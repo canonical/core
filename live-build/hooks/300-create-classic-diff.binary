@@ -12,7 +12,7 @@ PREFIX=binary/boot/filesystem.dir
 (cd $PREFIX
  mkdir -p var/lib/classic
  apt-get clean
- apt-get install --reinstall -d apt locales base-files libapt-inst2.0 libapt-pkg5.0
+ apt-get -y install --reinstall -d apt locales base-files libapt-inst2.0 libapt-pkg5.0
  cp /var/cache/apt/archives/*.deb var/cache/apt/archives/
 
  tar czvf var/lib/classic/classic-diff.tgz \
