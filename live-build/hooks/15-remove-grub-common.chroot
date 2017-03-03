@@ -5,9 +5,9 @@ rm -f /etc/init.d/grub-common
 
 echo "removing contents of grub-common except grub-editenv"
 if [ -e /var/lib/dpkg/info/grub-common.list ]; then
-  cat /var/lib/dpkg/info/grub-common.list | while read line; do
-    if ! echo $line | grep -q bin/grub-editenv; then
-        rm -f $line
+  cat /var/lib/dpkg/info/grub-common.list | while read -r line; do
+    if ! echo "$line" | grep -q bin/grub-editenv; then
+        rm -f "$line"
     fi
   done
 else

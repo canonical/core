@@ -1,0 +1,15 @@
+language: C
+dist: xenial
+sudo: required
+install:
+  - sudo apt install -y shellcheck
+  - sudo apt install -y software-properties-common
+  - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
+  - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
+  - sudo apt-add-repository -y ppa:snappy-dev/image
+  - sudo apt update
+  - sudo apt install -y base-files perl-base ca-certificates snapcraft
+  - sudo apt -y full-upgrade
+script:
+  - make check
+  - snapcraft

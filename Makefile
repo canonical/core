@@ -10,9 +10,6 @@ VERSION := 16-2
 #ENV += PROPOSED=1
 #endif
 
-check:
-	shellcheck live-build/hooks/*
-
 all: check
 	mkdir -p auto
 	for f in config build clean; \
@@ -28,6 +25,11 @@ all: check
 	cp -a live-build/hooks/* config/hooks/
 	$(ENV) lb build
 
+check:
+	# exlucde "useless cat" from checks, while useless also makes
+	# some things more readable
+	shellcheck -e SC2002 hooks/* live-build/hooks/*
+
 install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
@@ -40,3 +42,9 @@ install:
 	  mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest; \
 	  ls -l /build/core; \
 	fi
+
+check:
+	# exlucde "useless cat" from checks, while useless also makes
+	# some things more readable
+	shellcheck -e SC2002 hooks/* live-build/hooks/*
+
