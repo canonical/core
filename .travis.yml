@@ -13,9 +13,9 @@ install:
   - sudo chroot xenial-test-chroot apt-add-repository -y ppa:snappy-dev/image
   - sudo chroot xenial-test-chroot apt update
   - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft
-  - sudo chroot xenial-test-chroot mount /proc
-  - sudo chroot xenial-test-chroot mount /sys
-  - sudo chroot xenial-test-chroot mount /dev
+  - sudo chroot xenial-test-chroot mount -t proc proc /proc
+  - sudo chroot xenial-test-chroot mount -t sysfs sys /sys
+  - sudo chroot xenial-test-chroot mount -t devtmpfs udev /dev
   - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot
 script:
   - make check
