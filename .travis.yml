@@ -1,0 +1,6 @@
+language: C
+dist: xenial
+install:
+  - sudo apt install shellcheck
+script:
+  - make check
