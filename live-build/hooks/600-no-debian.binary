@@ -16,7 +16,7 @@ PREFIX=binary/boot/filesystem.dir
 
 # dpkg-deb and dpkg purposefully left behind
 (cd $PREFIX
-    chroot . dpkg --purge apt
+    chroot . dpkg --purge --force-depends apt libapt-inst2.0 libapt-pkg5.0
     rm -r \
         var/lib/dpkg \
         var/log/apt
@@ -27,4 +27,9 @@ PREFIX=binary/boot/filesystem.dir
         usr/bin/dpkg-trigger \
         usr/bin/dpkg-statoverride \
         usr/bin/dpkg-maintscript-helper
+    # remove generated locales for packages we do not use
+    rm -f usr/share/locale/*/LC_MESSAGES/dpkg*
+    rm -f usr/share/locale/*/LC_MESSAGES/libapt*
+    # also remove lsb_release (LP: #1619420)
+    rm -f usr/bin/lsb_release
 )

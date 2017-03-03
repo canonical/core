@@ -1,6 +1,6 @@
 DPKG_ARCH := $(shell dpkg --print-architecture)
 RELEASE := $(shell lsb_release -c -s)
-ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
+ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge snappy-dev/edge2' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
 
 # workaround for LP: #1588336, needs to be bumped along
 # with the snapcraft.yaml version for now
@@ -10,8 +10,7 @@ VERSION := 16-2
 #ENV += PROPOSED=1
 #endif
 
-
-all:
+all: check
 	mkdir -p auto
 	for f in config build clean; \
 	    do ln -s /usr/share/livecd-rootfs/live-build/auto/$$f auto/; \
@@ -38,3 +37,9 @@ install:
 	  mv livecd.ubuntu-core.manifest /build/core/core_$(VERSION)_$(DPKG_ARCH).manifest; \
 	  ls -l /build/core; \
 	fi
+
+check:
+	# exlucde "useless cat" from checks, while useless also makes
+	# some things more readable
+	shellcheck -e SC2002 hooks/* live-build/hooks/*
+
