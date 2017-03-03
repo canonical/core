@@ -2,13 +2,19 @@ language: C
 dist: xenial
 install:
   - sudo apt install shellcheck
+  - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
   - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo apt update
   - sudo apt install -y debootstrap
   - sudo debootstrap xenial xenial-test-chroot
   - sudo chroot xenial-test-chroot apt install -y software-properties-common
+  - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
+  - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo chroot xenial-test-chroot apt-add-repository -y ppa:snappy-dev/image
   - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft
+  - sudo chroot xenial-test-chroot mount /proc
+  - sudo chroot xenial-test-chroot mount /sys
+  - sudo chroot xenial-test-chroot mount /dev
   - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot
 script:
   - make check
