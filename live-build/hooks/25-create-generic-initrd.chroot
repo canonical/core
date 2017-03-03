@@ -12,11 +12,9 @@ IVER="$(dpkg -s initramfs-tools-ubuntu-core | \
 mkdir -p /etc/initramfs-tools/conf.d
 echo "COMPRESS=lzma" >/etc/initramfs-tools/conf.d/snappy-generic-initrd.conf
 
-update-initramfs.REAL -c -kcore-$IVER -v
+update-initramfs.REAL -c -kcore-"$IVER" -v
 
-cd /boot
-ln -s initrd.img-core-$IVER initrd.img-core
-cd -
+(cd /boot; ln -s initrd.img-core-"$IVER" initrd.img-core)
 
 sha1sum /boot/initrd.img-core >/var/lib/initramfs-tools/core
 
