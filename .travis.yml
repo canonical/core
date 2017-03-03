@@ -16,7 +16,8 @@ install:
   - sudo chroot xenial-test-chroot mount -t proc proc /proc
   - sudo chroot xenial-test-chroot mount -t sysfs sys /sys
   - sudo chroot xenial-test-chroot mount -t devtmpfs udev /dev
-  - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot
+  - sudo mkdir -p xenial-test-chroot/build
+  - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot/build
 script:
   - make check
-  - sudo chroot xenial-test-chroot snapcraft
+  - sudo chroot xenial-test-chroot sh -c 'cd build; snapcraft'
