@@ -2,13 +2,13 @@
 
 ERRCNT=""
 
-passwd_hash=$(md5sum /etc/passwd | cut -f1 -d' ')
-shadow_hash=$(cat /etc/shadow | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum | cut -f1 -d' ')
+passwd_hash=$(set -- "$(md5sum /etc/passwd)" && echo "$1")
+shadow_hash=$(set -- "$(cat /etc/shadow | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum)" && echo "$1")
 group_length=$(cat /etc/group | wc -l)
 gshadow_length=$(cat /etc/gshadow | wc -l)
 
-passwd_orig_hash=$(md5sum /etc/passwd.orig | cut -f1 -d' ')
-shadow_orig_hash=$(cat /etc/shadow.orig | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum | cut -f1 -d' ')
+passwd_orig_hash=$(set -- "$(md5sum /etc/passwd.orig)" && echo "$1")
+shadow_orig_hash=$(set -- "$(cat /etc/shadow.orig | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum)" && echo "$1")
 group_orig_length=$(cat /etc/group.orig | wc -l)
 gshadow_orig_length=$(cat /etc/gshadow.orig | wc -l)
 

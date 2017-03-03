@@ -9,10 +9,10 @@ group_bootstrap="ffbe05611b49480cb289f343a67d7e7b"
 gshadow_bootstrap="46121fc1a7d95f37e7a3fb21db8061e8"
 
 # Current post-debootstrap values
-passwd_hash=$(md5sum /etc/passwd | cut -f1 -d' ')
-shadow_hash=$(cat /etc/shadow | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum | cut -f1 -d' ')
-group_hash=$(md5sum /etc/group | cut -f1 -d' ')
-gshadow_hash=$(md5sum /etc/gshadow | cut -f1 -d' ')
+passwd_hash=$(set -- "$(md5sum /etc/passwd)" && echo "$1")
+shadow_hash=$(set -- "$(cat /etc/shadow | sed "s/:.*:0:99999:/:0:99999:/g" | md5sum)" && echo "$1")
+group_hash=$(set -- "$(md5sum /etc/group)" && echo "$1")
+gshadow_hash=$(set -- "$(md5sum /etc/gshadow)" && echo "$1")
 
 # /etc/passwd
 if [ "$passwd_bootstrap" = "$passwd_hash" ]; then
