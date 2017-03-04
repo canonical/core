@@ -21,7 +21,7 @@ if ! systemctl --version >/dev/null 2>&1; then
 fi
 
 # list of services we can disable and enable
-SERVICES="ssh"
+SERVICES="ssh rsyslog systemd-timesyncd"
 
 switch_handle_power_key() {
     dir="/etc/systemd/logind.conf.d"
