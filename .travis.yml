@@ -4,6 +4,8 @@ env:
   global:
     - URL=http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-amd64.tar.gz
     - CHROOT=xenial-test-chroot
+    - LC_ALL=C.UTF-8
+    - LANG=C.UTF-8
 install:
   - sudo apt install shellcheck fakeroot
   - mkdir -p $CHROOT/build
