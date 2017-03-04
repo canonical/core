@@ -13,9 +13,8 @@ install:
   - sudo cp /etc/resolv.conf $CHROOT/etc/
   - sudo mount --bind /dev $CHROOT/dev
   - sudo chroot $CHROOT apt install -y software-properties-common
-  - sudo chroot $CHROOT apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
-  - sudo chroot $CHROOT apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo chroot $CHROOT apt-add-repository -y ppa:snappy-dev/image
+  - sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
   - sudo chroot $CHROOT apt update
   - sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
   - sudo cp -a Makefile snapcraft.yaml hooks live-build $CHROOT/build
