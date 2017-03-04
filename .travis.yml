@@ -11,6 +11,7 @@ install:
   - mkdir -p $CHROOT/build
   - wget -q -O - $URL | zcat - | fakeroot tar x -C $CHROOT
   - sudo cp /etc/resolv.conf $CHROOT/etc/
+  - sudo mount --bind /dev $CHROOT/dev
   - sudo chroot $CHROOT apt install -y software-properties-common
   - sudo chroot $CHROOT apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
   - sudo chroot $CHROOT apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
