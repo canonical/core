@@ -7,9 +7,9 @@ env:
     - LC_ALL=C.UTF-8
     - LANG=C.UTF-8
 install:
-  - sudo apt install shellcheck fakeroot
+  - sudo apt install shellcheck
   - mkdir -p $CHROOT/build
-  - wget -q -O - $URL | zcat - | fakeroot tar x -C $CHROOT
+  - wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
   - sudo cp /etc/resolv.conf $CHROOT/etc/
   - sudo mount --bind /dev $CHROOT/dev
   - sudo chroot $CHROOT apt install -y software-properties-common
