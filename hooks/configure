@@ -75,7 +75,7 @@ switch_service() {
 }
 
 for service in $SERVICES; do
-    value=$(snapctl get service.$service.disable)
+    value=$(snapctl get service."$service".disable)
     if [ -n "$value" ]; then
         switch_service "$value" "$service"
     fi
