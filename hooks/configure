@@ -75,9 +75,9 @@ switch_service() {
 }
 
 update_pi_config_value() {
-    path="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
-    k="$1"
-    v="$2"
+    path="$1"
+    k="$2"
+    v="$3"
 
     if [ -z "$v" ]; then
         # empty - unset an option
@@ -108,7 +108,10 @@ PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
  framebuffer_depth framebuffer_ignore_alpha overscan_left overscan_right
  overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
  hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem"
-for key in $PI_CONFIG_KEYS; do
-    value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
-    update_pi_config_value "$key" "$value"
-done
+PI_CONFIG="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
+if [ -e "$PI_CONFIG" ]; then
+    for key in $PI_CONFIG_KEYS; do
+        value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
+        update_pi_config_value "$PI_CONFIG" "$key" "$value"
+    done
+fi
