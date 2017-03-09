@@ -1,4 +1,6 @@
-language: C
+language: python
+python:
+  - "3.5"
 dist: xenial
 install:
   - sudo apt install shellcheck
@@ -16,5 +18,5 @@ install:
   - sudo mkdir -p xenial-test-chroot/build
   - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot/build
 script:
-  - sudo chroot xenial-test-chroot make check
+  - make check
   - sudo chroot xenial-test-chroot sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
