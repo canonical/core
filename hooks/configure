@@ -75,7 +75,7 @@ switch_service() {
 }
 
 update_pi_config_value() {
-    path="/boot/uboot/config.txt"
+    path="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
     k="$1"
     v="$2"
 
@@ -84,7 +84,7 @@ update_pi_config_value() {
         sed -i -e "/^[ \t#]*${k}=/ s/^#*/#/" "$path"
     else
         # non-empty - set an option
-        if grep "$path" "^[ \t#]*${k}="; then
+        if grep -q "^[ \t#]*${k}=" "$path"; then
             sed -i -e "s/^[ \t#]*${k}=.*/$k=$v/" "$path"
         else
             echo "$k=$v" >> "$path"
@@ -109,8 +109,6 @@ PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
  overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
  hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem"
 for key in $PI_CONFIG_KEYS; do
-    value=$(snapctl get "pi-config.$key")
-    if [ -n "$value" ]; then
-       update_pi_config_value "$key" "$value"
-    fi
+    value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
+    update_pi_config_value "$key" "$value"
 done
