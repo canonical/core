@@ -74,6 +74,24 @@ switch_service() {
 	esac
 }
 
+update_pi_config_value() {
+    path="/boot/uboot/config.txt"
+    k="$1"
+    v="$2"
+
+    if [ -z "$v" ]; then
+        # empty - unset an option
+        sed -i -e "/^[ \t#]*${k}=/ s/^#*/#/" "$path"
+    else
+        # non-empty - set an option
+        if grep "$path" "^[ \t#]*${k}="; then
+            sed -i -e "s/^[ \t#]*${k}=.*/$k=$v/" "$path"
+        else
+            echo "$k=$v" >> "$path"
+        fi
+    fi
+}
+
 for service in $SERVICES; do
     value=$(snapctl get service.$service.disable)
     if [ -n "$value" ]; then
@@ -85,3 +103,14 @@ powerkey=$(snapctl get system.power-key-action)
 if [ -n "$powerkey" ]; then
     switch_handle_power_key "$powerkey"
 fi
+
+PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
+ framebuffer_depth framebuffer_ignore_alpha overscan_left overscan_right
+ overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
+ hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem"
+for key in $PI_CONFIG_KEYS; do
+    value=$(snapctl get "pi-config.$key")
+    if [ -n "$value" ]; then
+       update_pi_config_value "$key" "$value"
+    fi
+done
