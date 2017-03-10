@@ -116,6 +116,10 @@ PI_CONFIG="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
 if [ -f "$PI_CONFIG" ]; then
     for key in $PI_CONFIG_KEYS; do
         value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
+        if ! echo "$value" | grep -q '^[a-zA-Z0-9]*$'; then
+            echo "invalid value: \"$value\" for \"$key\" found" 1>&2
+            exit 1
+        fi
         update_pi_config_value "$PI_CONFIG" "$key" "$value"
     done
 fi
