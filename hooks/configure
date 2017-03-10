@@ -81,14 +81,13 @@ update_pi_config_value() {
 
     if [ -z "$v" ]; then
         # empty - unset an option
-        sed -i -e "/^[ \t#]*${k}=/ s/^#*/#/" "$path"
+        sed -i "/^[ \t#]*${k}=/ s/^#*/#/" "$path"
     else
         # non-empty - set an option
-        if grep -q "^[ \t#]*${k}=" "$path"; then
-            sed -i -e "s/^[ \t#]*${k}=.*/$k=$v/" "$path"
-        else
-            echo "$k=$v" >> "$path"
-        fi
+        sed -i \
+        -e "/^[ \t#]*$k=/,\${s/^[ \t#]*$k=.*/$k=$v/;b}" -e "# Replace existing and bail." \
+        -e "\${s/\$/\n$k=$v/}"                          -e "# Append if not found." \
+        "$path"
     fi
 }
 
@@ -109,7 +108,7 @@ PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
  overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
  hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem"
 PI_CONFIG="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
-if [ -e "$PI_CONFIG" ]; then
+if [ -f "$PI_CONFIG" ]; then
     for key in $PI_CONFIG_KEYS; do
         value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
         update_pi_config_value "$PI_CONFIG" "$key" "$value"
