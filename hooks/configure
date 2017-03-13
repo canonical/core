@@ -16,20 +16,20 @@
 
 import os
 import re
+import subprocess
 import sys
 
-from subprocess import (
-    CalledProcessError,
-    check_call,
-    check_output,
-    run,
-    DEVNULL,
-    PIPE,
-)
-
+from subprocess import check_output
 
 # list of services we can disable and enable
 SERVICES=("ssh",)
+
+
+def systemctl(*args, check=False):
+    res = subprocess.run(["systemctl"]+list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    if check and res.returncode != 0:
+        raise subprocess.CalledProcessError()
+    return res
 
 
 def core_support_available():
@@ -37,11 +37,7 @@ def core_support_available():
 
     The check is done indirectly via checking if systemctl can be used.
     """
-    try:
-        check_call(["systemctl", "--version"], stdout=DEVNULL, stderr=DEVNULL)
-    except CalledProcessError:
-        return False
-    return True
+    return systemctl("--version").returncode == 0
 
 
 def switch_handle_power_key(action):
@@ -65,17 +61,16 @@ def switch_service(service, enable):
  	# and fails with an error message. Because of that we're going
  	# in two steps here and disable first and then stopping the
  	# service unit.
-        check_call(["systemctl", "disable", srv])
-        check_call(["systemctl", "stop", srv])
+        systemctl("disable", srv)
+        systemctl("stop", srv)
     elif enable == "false":
  	# When the unit is already enabled but not active a call with
  	# --now does start the unit so we have to check for that  case
  	# and explicitly start the unit.
-        
-        if run(["systemctl", "is-enabled", srv], universal_newlines=True, stdout=PIPE).stdout.strip() == "disabled":
-            check_call(["systemctl", "enable", srv])
-        if run(["systemctl", "is-active", srv], universal_newlines=True, stdout=PIPE).stdout.strip() == "inactive":
-            check_call(["systemctl", "start", srv])
+        if systemctl("is-enabled", srv).stdout.strip() == "disabled":
+            systemctl("enable", srv, check=True)
+        if systemctl("is-active", srv).stdout.strip() == "inactive":
+            systemctl("start", srv, check=True)
     else:
         raise Exception("Invalid value '{}' provided for option {}".format(enable, srv))
 
