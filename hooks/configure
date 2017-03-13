@@ -22,7 +22,9 @@ from subprocess import (
     CalledProcessError,
     check_call,
     check_output,
-    DEVNULL
+    run,
+    DEVNULL,
+    PIPE,
 )
 
 
@@ -70,9 +72,9 @@ def switch_service(service, enable):
  	# --now does start the unit so we have to check for that  case
  	# and explicitly start the unit.
         
-        if check_output(["systemctl", "is-enabled", srv], universal_newlines=True) == "disabled":
+        if run(["systemctl", "is-enabled", srv], universal_newlines=True, stdout=PIPE).stdout.strip() == "disabled":
             check_call(["systemctl", "enable", srv])
-        if check_output(["systemctl", "is-active", srv], universal_newlines=True) == "inactive":
+        if run(["systemctl", "is-active", srv], universal_newlines=True, stdout=PIPE).stdout.strip() == "inactive":
             check_call(["systemctl", "start", srv])
     else:
         raise Exception("Invalid value '{}' provided for option {}".format(enable, srv))
