@@ -4,6 +4,8 @@ import subprocess
 import tempfile
 import unittest
 
+from .basetest import HookTest
+
 mock_config_txt = """
 # For more options and information see
 # http://www.raspberrypi.org/documentation/configuration/config-txt.md
@@ -19,27 +21,13 @@ mock_config_txt = """
 unrelated_options=are-keept
 """
 
-class TestPiConfigFromConfigureHook(unittest.TestCase):
-    def setUp(self):
-        self.tmp = tempfile.mkdtemp()
-        self.addCleanup(shutil.rmtree, self.tmp)
-        # mock systemctl as well as this is checked from the configure
-        # hook and may not be available everyhwere
-        self.mock_binary("systemctl", "")
+class TestPiConfigFromConfigureHook(HookTest):
 
     def mock_uboot_config(self, txt):
         self.mock_uboot_config = os.path.join(self.tmp, "config.txt")
         with open(self.mock_uboot_config, "w") as fp:
             fp.write(txt)
         os.environ["TEST_UBOOT_CONFIG"]=self.mock_uboot_config
-
-    def mock_binary(self, basename, script):
-        mocked_binary=os.path.join(self.tmp, basename)
-        if not self.tmp in os.environ["PATH"]:
-            os.environ["PATH"] = self.tmp+":"+os.environ["PATH"]
-        with open(mocked_binary, "w") as fp:
-            fp.write("#!/bin/sh\n%s\n" % script)
-        os.chmod(mocked_binary, 0o755)
 
     def mock_snapctl(self, k, v):
         self.mock_binary("snapctl", """if [ "$1" = "get" ] && [ "$2" = "%s" ]; then echo "%s"; fi""" % (k, v))

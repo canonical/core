@@ -27,7 +27,7 @@ from subprocess import (
 
 
 # list of services we can disable and enable
-SERVICES="ssh"
+SERVICES=("ssh",)
 
 
 def core_support_available():
@@ -51,29 +51,31 @@ def switch_handle_power_key(action):
         os.makedirs(login_conf_d)
     if not action in valid_actions:
         raise Exception("invalid action '{}' supplied for system.power-key-action option".format(action))
-    with open(conf+".tmp", "w", universal_newlines=True) as fp:
+    with open(conf+".tmp", "w") as fp:
         fp.write("[Login]\nHandlePowerKey={}".format(action))
     os.rename(conf+".tmp", conf)
 
 
 def switch_service(service, enable):
     srv = "{}.service".format(service)
-    if enable:
+    if enable == "true":
  	# A simple `systemctl disable --now ssh.service` doesn't work
  	# and fails with an error message. Because of that we're going
  	# in two steps here and disable first and then stopping the
  	# service unit.
         check_call(["systemctl", "disable", srv])
         check_call(["systemctl", "stop", srv])
-    else:
+    elif enable == "false":
  	# When the unit is already enabled but not active a call with
  	# --now does start the unit so we have to check for that  case
  	# and explicitly start the unit.
         
-        if check_output(["systemctl", "is-enabled", srv], univeral_newlines=True) == "disabled":
+        if check_output(["systemctl", "is-enabled", srv], universal_newlines=True) == "disabled":
             check_call(["systemctl", "enable", srv])
         if check_output(["systemctl", "is-active", srv], universal_newlines=True) == "inactive":
             check_call(["systemctl", "start", srv])
+    else:
+        raise Exception("Invalid value '{}' provided for option {}".format(enable, srv))
 
 
 def update_pi_config_value(path, key, value):
@@ -99,11 +101,11 @@ if __name__ == "__main__":
         sys.exit(0)
 
     for service in SERVICES:
-        value=check_output(["snapctl", "get", "service.{}.disable".format(service)], universal_newlines=True)
+        value=check_output(["snapctl", "get", "service.{}.disable".format(service)], universal_newlines=True).strip()
         if value != "":
             switch_service(service, value)
     
-    powerkey=check_output(["snapctl", "get", "system.power-key-action"], universal_newlines=True)
+    powerkey=check_output(["snapctl", "get", "system.power-key-action"], universal_newlines=True).strip()
     if powerkey != "":
         switch_handle_power_key(powerkey)
 
@@ -117,6 +119,6 @@ if __name__ == "__main__":
     PI_CONFIG=os.getenv("TEST_UBOOT_CONFIG", default="/boot/uboot/config.txt")
     if os.path.isfile(PI_CONFIG):
         for key in PI_CONFIG_KEYS:
-            value=check_output(["snapctl", "get", "pi-config.{}".format(key.replace("_","-"))], universal_newlines=True)
-            update_pi_config_value(PI_CONFIG, key, value.strip())
+            value=check_output(["snapctl", "get", "pi-config.{}".format(key.replace("_","-"))], universal_newlines=True).strip()
+            update_pi_config_value(PI_CONFIG, key, value)
 
