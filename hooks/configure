@@ -54,7 +54,7 @@ def switch_handle_power_key(action):
     if not action in valid_actions:
         raise Exception("invalid action '{}' supplied for system.power-key-action option".format(action))
     with open(conf+".tmp", "w") as fp:
-        fp.write("[Login]\nHandlePowerKey={}".format(action))
+        fp.write("[Login]\nHandlePowerKey={}\n".format(action))
     os.rename(conf+".tmp", conf)
 
 
