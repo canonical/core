@@ -3,7 +3,6 @@ python:
   - "3.5"
 dist: xenial
 install:
-  - sudo apt install shellcheck
   - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
   - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo apt update
@@ -14,10 +13,9 @@ install:
   - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
   - sudo chroot xenial-test-chroot apt-add-repository -y ppa:snappy-dev/image
   - sudo chroot xenial-test-chroot apt update
-  - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft
+  - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft pyflakes3 shellcheck
   - sudo mkdir -p xenial-test-chroot/build
   - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot/build
 script:
-  - pip3 install pyflakes
-  - make check
+  - sudo chroot xenial-test-chroot make check
   - sudo chroot xenial-test-chroot sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
