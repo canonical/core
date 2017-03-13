@@ -74,9 +74,3 @@ class TestPiConfigFromConfigureHook(unittest.TestCase):
         expected=mock_config_txt+"framebuffer_depth=32\n"
         subprocess.check_call(["hooks/configure"])
         self.assertEqual(self.read_mock_uboot_config(), expected)
-
-    def test_configure_pi_config_filters_nasty(self):
-        self.mock_uboot_config(mock_config_txt+"\navoid_warnings=1\n")
-        self.mock_snapctl("pi-config.avoid-warnings", "1/;e touch /tmp/foo;")
-        with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.check_output(["hooks/configure"])
