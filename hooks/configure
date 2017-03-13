@@ -44,7 +44,7 @@ def core_support_available():
 
 def switch_handle_power_key(action):
     valid_actions = ("ignore","poweroff","reboot","halt","kexec","suspend","hibernate","hybrid-sleep","lock")
-    login_conf_d="/etc/systemd/logind.conf.d"
+    login_conf_d=os.getenv("TEST_LOGIN_CONF_D", default="/etc/systemd/logind.conf.d")
     conf=os.path.join(login_conf_d, "00-snap-core.conf")
 
     if not os.path.isdir(login_conf_d):

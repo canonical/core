@@ -5,11 +5,6 @@ from .basetest import HookTest
 
 class TestConfigureHookServices(HookTest):
 
-    def read_mock_uboot_config(self):
-        with open(self.mock_uboot_config) as fp:
-            content=fp.read()
-        return content
-
     def test_configure_service_disable(self):
         self.mock_snapctl("service.ssh.disable", "true")
         subprocess.check_call(["hooks/configure"])
