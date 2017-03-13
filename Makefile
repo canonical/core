@@ -41,5 +41,6 @@ install:
 check:
 	# exlucde "useless cat" from checks, while useless also makes
 	# some things more readable
-	shellcheck -e SC2002 hooks/* live-build/hooks/*
+	shellcheck -e SC2002 live-build/hooks/*
+	pyflakes3 hooks/configure
 	python3 -m unittest

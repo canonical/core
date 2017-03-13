@@ -23,4 +23,5 @@ parts:
     plugin: make
     build-packages:
       - livecd-rootfs
+      - pyflakes3
       - shellcheck
