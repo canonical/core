@@ -18,5 +18,6 @@ install:
   - sudo mkdir -p xenial-test-chroot/build
   - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot/build
 script:
+  - pip3 install pyflakes
   - make check
   - sudo chroot xenial-test-chroot sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
