@@ -10,6 +10,7 @@ hooks:
   configure:
     plugs:
       - core-support
+      - network-bind
 
 parts:
   hooks:
