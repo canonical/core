@@ -9,6 +9,8 @@ env:
     - LC_ALL=C.UTF-8
     - LANG=C.UTF-8
 install:
+  - sudo pip install pyflakes
+  - sudo ln -s /usr/local/bin/pyflakes /usr/local/bin/pyflakes3
   - sudo apt install shellcheck
   - mkdir -p $CHROOT/build
   - wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
