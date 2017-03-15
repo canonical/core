@@ -1,8 +1,5 @@
 import os
-import shutil
 import subprocess
-import tempfile
-import unittest
 
 from .basetest import HookTest
 
@@ -28,9 +25,6 @@ class TestPiConfigFromConfigureHook(HookTest):
         with open(self.mock_uboot_config, "w") as fp:
             fp.write(txt)
         os.environ["TEST_UBOOT_CONFIG"]=self.mock_uboot_config
-
-    def mock_snapctl(self, k, v):
-        self.mock_binary("snapctl", """if [ "$1" = "get" ] && [ "$2" = "%s" ]; then echo "%s"; fi""" % (k, v))
 
     def read_mock_uboot_config(self):
         with open(self.mock_uboot_config) as fp:

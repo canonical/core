@@ -2,20 +2,24 @@ language: python
 python:
   - "3.5"
 dist: xenial
+env:
+  global:
+    - URL=http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-amd64.tar.gz
+    - CHROOT=xenial-test-chroot
+    - LC_ALL=C.UTF-8
+    - LANG=C.UTF-8
 install:
-  - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
-  - sudo apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
-  - sudo apt update
-  - sudo apt install -y debootstrap
-  - sudo debootstrap xenial xenial-test-chroot
-  - sudo chroot xenial-test-chroot apt install -y software-properties-common
-  - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
-  - sudo chroot xenial-test-chroot apt-add-repository -y 'deb http://archive.ubuntu.com/ubuntu/ xenial-updates main universe'
-  - sudo chroot xenial-test-chroot apt-add-repository -y ppa:snappy-dev/image
-  - sudo chroot xenial-test-chroot apt update
-  - sudo chroot xenial-test-chroot apt install -y livecd-rootfs snapcraft pyflakes3 shellcheck make
-  - sudo mkdir -p xenial-test-chroot/build
-  - sudo cp -a Makefile snapcraft.yaml hooks live-build xenial-test-chroot/build
+  - sudo apt install shellcheck
+  - mkdir -p $CHROOT/build
+  - wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
+  - sudo cp /etc/resolv.conf $CHROOT/etc/
+  - sudo mount --bind /dev $CHROOT/dev
+  - sudo chroot $CHROOT apt install -y software-properties-common
+  - sudo chroot $CHROOT apt-add-repository -y ppa:snappy-dev/image
+  - sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
+  - sudo chroot $CHROOT apt update
+  - sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
+  - sudo cp -a Makefile snapcraft.yaml hooks live-build $CHROOT/build
 script:
-  - sudo chroot xenial-test-chroot make check
-  - sudo chroot xenial-test-chroot sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
+  - make check
+  - sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
