@@ -1,4 +1,6 @@
-language: C
+language: python
+python:
+  - "3.5"
 dist: xenial
 install:
   - sudo apt install shellcheck

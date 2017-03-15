@@ -74,6 +74,34 @@ switch_service() {
 	esac
 }
 
+update_pi_config_value() {
+    path="$1"
+    key="$2"
+    value="$3"
+
+    if [ -z "$value" ]; then
+        # empty - unset an option
+        sed -i "/^[ \t#]*${key}=/ s/^#*/#/" "$path"
+    else
+        # non-empty - set an option
+        export key value
+        awk -v pat="^[ \t#]*$key=.*" --sandbox -f - "$path" >"${path}.tmp" <<'EOF'
+$0 ~ pat {
+     gsub(pat, sprintf("%s=%s",ENVIRON["key"],ENVIRON["value"]))
+     ok=1
+}
+{
+    print
+}
+END {
+    if (!ok)
+        printf("%s=%s\n",ENVIRON["key"],ENVIRON["value"])
+}
+EOF
+        mv "${path}.tmp" "$path"
+    fi
+}
+
 for service in $SERVICES; do
     value=$(snapctl get service.$service.disable)
     if [ -n "$value" ]; then
@@ -84,4 +112,16 @@ done
 powerkey=$(snapctl get system.power-key-action)
 if [ -n "$powerkey" ]; then
     switch_handle_power_key "$powerkey"
+fi
+
+PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
+ framebuffer_depth framebuffer_ignore_alpha overscan_left overscan_right
+ overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
+ hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem"
+PI_CONFIG="${TEST_UBOOT_CONFIG:-/boot/uboot/config.txt}"
+if [ -f "$PI_CONFIG" ]; then
+    for key in $PI_CONFIG_KEYS; do
+        value=$(snapctl get "pi-config.$(echo "$key"|tr _ -)")
+        update_pi_config_value "$PI_CONFIG" "$key" "$value"
+    done
 fi
