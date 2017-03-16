@@ -25,3 +25,4 @@ parts:
     build-packages:
       - livecd-rootfs
       - shellcheck
+      - gawk
