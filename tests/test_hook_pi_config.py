@@ -74,3 +74,12 @@ class TestPiConfigFromConfigureHook(unittest.TestCase):
         expected=mock_config_txt+"framebuffer_depth=32\n"
         subprocess.check_call(["hooks/configure"])
         self.assertEqual(self.read_mock_uboot_config(), expected)
+
+    def test_configure_pi_config_no_change_unset(self):
+        self.mock_uboot_config(mock_config_txt)
+        st1 = os.stat(self.mock_uboot_config)
+        self.mock_snapctl("pi-connfig.hdmi_safe", "")
+        subprocess.check_call(["hooks/configure"])
+        st2 = os.stat(self.mock_uboot_config)
+        self.assertEqual(st1.st_mtime_ns, st2.st_mtime_ns)
+
