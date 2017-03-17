@@ -22,5 +22,5 @@ install:
   - sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
   - sudo cp -a Makefile snapcraft.yaml hooks live-build $CHROOT/build
 script:
-  - make check
+  - make check PYTHON=python 
   - sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
