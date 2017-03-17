@@ -83,3 +83,11 @@ class TestPiConfigFromConfigureHook(unittest.TestCase):
         st2 = os.stat(self.mock_uboot_config)
         self.assertEqual(st1.st_mtime_ns, st2.st_mtime_ns)
 
+    def test_configure_pi_config_no_change_set(self):
+        self.mock_uboot_config(mock_config_txt)
+        self.mock_snapctl("pi-config.disable-overscan", "1")
+        subprocess.check_call(["hooks/configure"])
+        st1 = os.stat(self.mock_uboot_config)
+        subprocess.check_call(["hooks/configure"])
+        st2 = os.stat(self.mock_uboot_config)
+        self.assertEqual(st1.st_mtime_ns, st2.st_mtime_ns)
