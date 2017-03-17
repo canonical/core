@@ -88,24 +88,37 @@ def switch_service(service, enable):
         raise Exception("Invalid value {!r} provided for option {}".format(enable, srv))
 
 def update_pi_config(path, config):
-    with open(path) as r, open(path+".tmp", "w") as w:
+    to_write=[]
+    needs_write=False
+    with open(path) as r:
         found=set()
-        rx=re.compile(r'^[ \t#]*(?P<key>{})=(?P<old_value>.*)$'.format("|".join(config)))
+        rx=re.compile(r'^[ \t]*?(?P<is_comment>#?)[ \t#]*?(?P<key>{})=(?P<old_value>.*)$'.format("|".join(config)))
         for line in r:
             m=rx.match(line)
             if m is not None:
                 key=m.group("key")
+                was_comment=m.group("is_comment") == "#"
+                old_value=m.group("old_value")
                 found.add(key)
                 if config[key]:
-                    line="{}={}\n".format(key, config[key])
+                    if was_comment or old_value != config[key]:
+                        line="{}={}\n".format(key, config[key])
+                        needs_write=True
                 else:
-                    line="#{}={}\n".format(key, m.group("old_value"))
-            w.write(line)
+                    line="#{}={}\n".format(key, old_value)
+                    if not was_comment:
+                        needs_write=True
+            to_write.append(line)
         for key in set(config)-found:
             if config[key]:
-                w.write("{}={}\n".format(key, config[key]))
-        _filesync(w)
-    _dirsync(path)
+                needs_write=True
+                to_write.append("{}={}\n".format(key, config[key]))
+    if needs_write:
+        with open(path+".tmp", "w") as w:
+            for line in to_write:
+                w.write(line)
+            _filesync(w)
+        _dirsync(path)
 
 if __name__ == "__main__":
     if not core_support_available():
