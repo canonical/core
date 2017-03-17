@@ -24,6 +24,32 @@ from subprocess import check_output
 # list of services we can disable and enable
 SERVICES=("ssh",)
 
+class atomic:
+    """atomic is a context manager that creates a new tmpfile for the
+    given target and syncs/renames it when all writing is done, to
+    make the final operation as atomic as possible.
+    """
+    def __init__(self, path):
+        dirname, self.target = os.path.split(path)
+        self.dir_fd = os.open(dirname, os.O_RDONLY)
+        self.fd = os.open(self.target+".tmp", os.O_WRONLY|os.O_CREAT|os.O_EXCL,
+                          mode=0o644, dir_fd=self.dir_fd)
+        self.f = open(self.fd, "w", closefd=False)
+    def __enter__(self):
+        return self.f
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.f.flush()
+        self.f.close()
+        os.fsync(self.fd)
+        os.close(self.fd)
+        os.rename(self.target+".tmp", self.target,
+                  src_dir_fd=self.dir_fd, dst_dir_fd=self.dir_fd)
+        try:
+            os.fsync(self.dir_fd)
+        finally:
+            os.close(self.dir_fd)
+        # raise any exceptions that happened in context
+        return False
 
 def systemctl(*args, check=False):
     res = subprocess.run(["systemctl"]+list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
@@ -40,19 +66,6 @@ def core_support_available():
     return systemctl("--version").returncode == 0
 
 
-def _filesync(fp):
-    fp.flush()
-    os.fsync(fp.fileno())
-
-def _dirsync(path):
-    os.rename(path+".tmp", path)
-    dfd=os.open(os.path.dirname(path), os.O_RDONLY)
-    try:
-        os.fsync(dfd)
-    finally:
-        os.close(dfd)
-
-
 def switch_handle_power_key(action):
     valid_actions = ("ignore","poweroff","reboot","halt","kexec","suspend","hibernate","hybrid-sleep","lock")
     login_conf_d=os.getenv("TEST_LOGIN_CONF_D", default="/etc/systemd/logind.conf.d")
@@ -62,10 +75,8 @@ def switch_handle_power_key(action):
         os.makedirs(login_conf_d)
     if not action in valid_actions:
         raise Exception("invalid action {!r} supplied for system.power-key-action option".format(action))
-    with open(conf+".tmp", "w") as fp:
+    with atomic(conf) as fp:
         fp.write("[Login]\nHandlePowerKey={}\n".format(action))
-        _filesync(fp)
-    _dirsync(conf)
 
 def switch_service(service, enable):
     srv = "{}.service".format(service)
@@ -114,11 +125,9 @@ def update_pi_config(path, config):
                 needs_write=True
                 to_write.append("{}={}\n".format(key, config[key]))
     if needs_write:
-        with open(path+".tmp", "w") as w:
+        with atomic(path) as w:
             for line in to_write:
                 w.write(line)
-            _filesync(w)
-        _dirsync(path)
 
 if __name__ == "__main__":
     if not core_support_available():
