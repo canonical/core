@@ -82,7 +82,8 @@ update_pi_config_value() {
     if [ -z "$value" ]; then
         # empty - unset an option
         if grep -q "^[ \t]*${key}=" "$path"; then
-            sed -i "/^[ \t#]*${key}=/ s/^#*/#/" "$path"
+            sed "/^[ \t#]*${key}=/ s/^#*/#/" "$path" > "${path}.tmp"
+            mv "${path}.tmp" "$path"
         fi
     else
         # non-empty - set an option
