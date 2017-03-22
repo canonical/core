@@ -130,4 +130,3 @@ if [ -f "$PI_CONFIG" ]; then
         update_pi_config_value "$PI_CONFIG" "$key" "$value"
     done
 fi
-sync
