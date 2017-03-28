@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+# Ensure cloud-init runs after networkd-wait-online.service since Ubuntu Core uses networkd
+CI_SERVICE=/lib/systemd/system/cloud-init.service
+if ! grep -q 'After=systemd-networkd-wait-online.service' ${CI_SERVICE}; then
+    sed -i -e '/After=networking.service/a After=systemd-networkd-wait-online.service' ${CI_SERVICE};
+fi
+
+# Trigger wait-online service if netplan is updated
+NETWORKD_ONLINE_PATH=/lib/systemd/system/systemd-networkd-wait-online.path
+cat <<EOF >$NETWORKD_ONLINE_PATH
+[Unit]
+Description=Trigger systemd-networkd-wait-online if netplan updates
+
+[Path]
+PathChanged=/run/systemd/generator/netplan.stamp
+EOF
+
+# Ensure we're always using systemd-networkd
+mkdir -p /etc/systemd/system/network-online.target.wants
+ln -sf /lib/systemd/system/systemd-networkd.service /etc/systemd/system/network-online.target.wants/systemd-networkd.service ||:
+
+exit 0
