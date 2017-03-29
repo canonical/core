@@ -21,5 +21,3 @@ EOF
 # Ensure we're always using systemd-networkd
 mkdir -p /etc/systemd/system/network-online.target.wants
 ln -sf /lib/systemd/system/systemd-networkd.service /etc/systemd/system/network-online.target.wants/systemd-networkd.service ||:
-
-exit 0
