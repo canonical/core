@@ -35,19 +35,27 @@ def atomic(path):
     tmp = target + ".tmp"
     dfd = os.open(dirname, os.O_RDONLY)
     fd = os.open(tmp, os.O_WRONLY|os.O_CREAT|os.O_EXCL, mode=0o644, dir_fd=dfd)
+
     f = open(fd, "w", closefd=False)
 
-    yield f
-
-    f.flush()
-    f.close()
-    os.fsync(fd)
-    os.close(fd)
-    os.rename(tmp, target, src_dir_fd=dfd, dst_dir_fd=dfd)
     try:
-        os.fsync(dfd)
+        yield f
+    except:
+        f.close()
+        os.close(fd)
+        os.unlink(tmp, dir_fd=dfd)
+        raise
+    else:
+        f.flush()
+        f.close()
+        os.fsync(fd)
+        os.close(fd)
+        os.rename(tmp, target, src_dir_fd=dfd, dst_dir_fd=dfd)
     finally:
-        os.close(dfd)
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
 
 def systemctl(*args, check=False):
     res = subprocess.run(["systemctl"]+list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
