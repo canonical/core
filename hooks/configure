@@ -135,7 +135,8 @@ def update_pi_config(path, config):
             for line in to_write:
                 w.write(line)
 
-if __name__ == "__main__":
+
+def main():
     if not core_support_available():
         print("Cannot run systemctl - is core-support available?")
         sys.exit(0)
@@ -165,4 +166,8 @@ if __name__ == "__main__":
             value=check_output(["snapctl", "get", "pi-config.{}".format(key.replace("_","-"))], universal_newlines=True).strip()
             config[key]=value
         update_pi_config(PI_CONFIG, config)
+
+
+if __name__ == "__main__":
+    main()
 

@@ -15,6 +15,7 @@ install:
   - wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
   - sudo cp /etc/resolv.conf $CHROOT/etc/
   - sudo mount --bind /dev $CHROOT/dev
+  - sudo chroot $CHROOT apt update
   - sudo chroot $CHROOT apt install -y software-properties-common
   - sudo chroot $CHROOT apt-add-repository -y ppa:snappy-dev/image
   - sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
