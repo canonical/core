@@ -34,7 +34,7 @@ def atomic(path):
     dirname, target = os.path.split(path)
     tmp = target + ".tmp"
     dfd = os.open(dirname, os.O_RDONLY)
-    fd = os.open(tmp, os.O_WRONLY|os.O_CREAT|os.O_EXCL, mode=0o644, dir_fd=dfd)
+    fd = os.open(tmp, os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_CLOEXEC, mode=0o644, dir_fd=dfd)
 
     f = open(fd, "w", closefd=False)
 
