@@ -132,8 +132,7 @@ def update_pi_config(path, config):
                 to_write.append("{}={}\n".format(key, config[key]))
     if needs_write:
         with atomic(path) as w:
-            for line in to_write:
-                w.write(line)
+            w.writelines(to_write)
 
 
 def main():
