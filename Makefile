@@ -46,5 +46,6 @@ check:
 	shellcheck -e SC2002 live-build/hooks/*
 	which python
 	$(PYTHON) --version
-	$(PYTHON) -m pyflakes hooks/configure
+	$(PYTHON) -m pyflakes hooks/configure tests/*.py
 	$(PYTHON) -m unittest
+
