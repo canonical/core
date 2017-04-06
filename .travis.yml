@@ -9,6 +9,7 @@ env:
     - LC_ALL=C.UTF-8
     - LANG=C.UTF-8
 install:
+  - pip install pyflakes
   - sudo apt install shellcheck
   - mkdir -p $CHROOT/build
   - wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
@@ -22,5 +23,5 @@ install:
   - sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
   - sudo cp -a Makefile snapcraft.yaml hooks live-build $CHROOT/build
 script:
-  - make check
+  - make check PYTHON=python 
   - sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'

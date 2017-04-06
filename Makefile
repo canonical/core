@@ -1,6 +1,8 @@
 DPKG_ARCH := $(shell dpkg --print-architecture)
 RELEASE := $(shell lsb_release -c -s)
 ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
+# default python, needs to be override for travis
+PYTHON = python3
 
 # workaround for LP: #1588336, needs to be bumped along
 # with the snapcraft.yaml version for now
@@ -41,5 +43,9 @@ install:
 check:
 	# exlucde "useless cat" from checks, while useless also makes
 	# some things more readable
-	shellcheck -e SC2002 hooks/* live-build/hooks/*
-	python3 -m unittest
+	shellcheck -e SC2002 live-build/hooks/*
+	which python
+	$(PYTHON) --version
+	$(PYTHON) -m pyflakes hooks/configure $(find . -name *.py)
+	$(PYTHON) -m unittest
+
