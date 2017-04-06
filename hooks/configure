@@ -89,7 +89,7 @@ update_pi_config_value() {
         if ! grep -q "^[ \t]*${key}=${value}$" "$path"; then
             # non-empty - set an option
             export key value
-            awk -v pat="^[ \t#]*$key=.*" --sandbox -f - "$path" >"${path}.tmp" <<'EOF'
+            mawk -v pat="^[ \t#]*$key=.*" -f - "$path" >"${path}.tmp" <<'EOF'
 $0 ~ pat {
      gsub(pat, sprintf("%s=%s",ENVIRON["key"],ENVIRON["value"]))
      ok=1
