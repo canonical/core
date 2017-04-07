@@ -6,11 +6,15 @@ confinement: strict
 type: os
 grade: stable
 
+plugs:
+  core-support-hook:
+    interface: core-support
+  network-bind-hook:
+    interface: network-bind
+
 hooks:
   configure:
-    plugs:
-      - core-support
-      - network-bind
+    plugs: [core-support-hook, network-bind-hook]
 
 parts:
   hooks:
