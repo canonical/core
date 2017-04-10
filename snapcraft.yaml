@@ -7,9 +7,9 @@ type: os
 grade: stable
 
 plugs:
-  core-support-hook:
+  core-support-plug:
     interface: core-support
-  network-bind-hook:
+  network-bind-plug:
     interface: network-bind
 
 hooks:
