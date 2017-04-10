@@ -14,7 +14,7 @@ plugs:
 
 hooks:
   configure:
-    plugs: [core-support-hook, network-bind-hook]
+    plugs: [core-support-plug, network-bind-plug]
 
 parts:
   hooks:
