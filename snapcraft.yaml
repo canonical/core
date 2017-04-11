@@ -9,8 +9,6 @@ grade: stable
 plugs:
   core-support-plug:
     interface: core-support
-  network-bind-plug:
-    interface: network-bind
 
 hooks:
   configure:
