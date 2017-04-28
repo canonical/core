@@ -21,6 +21,7 @@ PREFIX=binary/boot/filesystem.dir
         var/lib/dpkg \
         var/log/apt
     rm \
+        usr/bin/dpkg \
         usr/bin/dpkg-query \
         usr/bin/dpkg-split \
         usr/bin/dpkg-divert \
