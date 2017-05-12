@@ -9,7 +9,8 @@ https://bugs.launchpad.net/snapd/+filebug
 
 ## Building
 
-To build the core snap locally please use `sudo snapcraft`.
+To build the core snap locally please use `sudo snapcraft` in a 16.04
+chroot or container.
 
 An easy way to customize the content of the built snap is including additional
 PPAs with custom packages in the `EXTRA_PPAS` variable inside the Makefile's
