@@ -1,7 +1,7 @@
 name: core
 version: 16-2
 version-script: |
-    echo "16-$(cat prime/usr/lib/snapd/info |cut -f2 -d=)"
+    echo "16-$(cat prime/usr/lib/snapd/info |cut -f2 -d=|cut -b1-32)"
 summary: snapd runtime environment
 description: The core runtime environment for snapd
 confinement: strict
