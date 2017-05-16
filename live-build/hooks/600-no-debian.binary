@@ -35,5 +35,8 @@ PREFIX=binary/boot/filesystem.dir
     rm -f var/log/bootstrap.log \
           var/log/alternatives.log \
           var/log/dpkg.log
+    # also remove obsolete cron jobs
+    rm -f /etc/cron.daily/dpkg \
+          /etc/cron.daily/passwd
     
 )
