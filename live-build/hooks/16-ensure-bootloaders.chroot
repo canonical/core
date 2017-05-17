@@ -19,3 +19,5 @@ mkdir -p /boot/grub
 if [ -e /usr/share/grub/unicode.pf2 ]; then
     cp /usr/share/grub/unicode.pf2 /boot/grub/
 fi
+
+mkdir -p /boot/androidboot
