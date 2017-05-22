@@ -21,7 +21,7 @@ if ! systemctl --version >/dev/null 2>&1; then
 fi
 
 # list of services we can disable and enable
-SERVICES="ssh"
+SERVICES="ssh rsyslog"
 
 switch_handle_power_key() {
     dir="/etc/systemd/logind.conf.d"
@@ -108,7 +108,7 @@ EOF
 }
 
 for service in $SERVICES; do
-    value=$(snapctl get service.$service.disable)
+    value=$(snapctl get service."$service".disable)
     if [ -n "$value" ]; then
         switch_service "$value" "$service"
     fi
