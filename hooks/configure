@@ -74,22 +74,29 @@ switch_service() {
 	esac
 }
 
-update_pi_config_value() {
-    path="$1"
-    key="$2"
-    value="$3"
+# helper that checks if the given tmp_path can be written
+is_writable() {
+    tmp_path="$1"
+    printf "" 2>/dev/null >> "$tmp_path"
+}
 
-    if [ -z "$value" ]; then
-        # empty - unset an option
-        if grep -q "^[ \t]*${key}=" "$path"; then
-            sed "/^[ \t#]*${key}=/ s/^#*/#/" "$path" > "${path}.tmp"
-            mv "${path}.tmp" "$path"
-        fi
-    else
-        if ! grep -q "^[ \t]*${key}=${value}$" "$path"; then
-            # non-empty - set an option
-            export key value
-            gawk --sandbox -v pat="^[ \t#]*$key=.*" -f - "$path" >"${path}.tmp" <<'EOF'
+# replace_or_append is a helper that will replace an existing option
+# in a key=value file. If the option is missing it will append the
+# option.
+key_value_replace_or_append() {
+    key="$1"
+    value="$2"
+    path="$3"
+    tmp_path="${path}.tmp"
+
+    # not writable, most likely due to a read-only directory, e.g. when
+    # dealing with /etc/envirionment on core
+    if ! is_writable "$tmp_path"; then
+        tmp_path="$(mktemp)"
+    fi
+
+    export key value
+    gawk --sandbox -v pat="^[ \t#]*$key=.*" -f - "$path" >"${tmp_path}" <<'EOF'
 $0 ~ pat {
      gsub(pat, sprintf("%s=%s",ENVIRON["key"],ENVIRON["value"]))
      ok=1
@@ -102,7 +109,50 @@ END {
         printf("%s=%s\n",ENVIRON["key"],ENVIRON["value"])
 }
 EOF
-            mv "${path}.tmp" "$path"
+    mv "${tmp_path}" "$path"
+}
+
+update_pi_config_value() {
+    path="$1"
+    key="$2"
+    value="$3"
+
+    if [ -z "$value" ]; then
+        # empty - unset an option
+        if grep -q "^[ \t]*${key}=" "$path"; then
+            tmp_path="${path}.tmp"
+
+            sed "/^[ \t#]*${key}=/ s/^#*/#/" "$path" > "${tmp_path}"
+            mv "${tmp_path}" "$path"
+        fi
+    else
+        if ! grep -q "^[ \t]*${key}=${value}$" "$path"; then
+            # non-empty - set an option
+            key_value_replace_or_append "$key" "$value" "$path"
+        fi
+    fi
+}
+
+switch_proxy() {
+    path="$1"
+    proxy="${2}_proxy"
+    value="$3"
+
+    if [ -z "$value" ]; then
+        if grep -q "^${proxy}=.*" "$path";then
+            tmp_path="${path}.tmp"
+            # not writable, most likely due to a read-only directory, e.g. when
+            # dealing with /etc/envirionment on core
+            if ! is_writable "$tmp_path"; then
+                tmp_path="$(mktemp)"
+            fi
+
+            sed  "/^${proxy}=.*/d" "$path" > "${tmp_path}"
+            mv "${tmp_path}" "${path}"
+        fi
+    else
+        if ! grep -q "^${proxy}=${value}" "$path";then
+            key_value_replace_or_append "$proxy" "$value" "$path"
         fi
     fi
 }
@@ -131,3 +181,9 @@ if [ -f "$PI_CONFIG" ]; then
         update_pi_config_value "$PI_CONFIG" "$key" "$value"
     done
 fi
+
+ETC_ENVIRONMENT="${TEST_ETC_ENVIRONMENT:-/etc/environment}"
+for proxy in http https ftp all; do
+    value=$(snapctl get "proxy.${proxy}")
+    switch_proxy "$ETC_ENVIRONMENT" "$proxy" "$value"
+done
