@@ -1,6 +1,7 @@
 DPKG_ARCH := $(shell dpkg --print-architecture)
 RELEASE := $(shell lsb_release -c -s)
-ENV := PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
+SUDO := sudo
+ENV := $(SUDO) PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
 
 #ifneq ($(shell grep $(RELEASE)-proposed /etc/apt/sources.list),)
 #ENV += PROPOSED=1
@@ -24,10 +25,10 @@ all: check
 install:
 	echo "I: in install target"
 	# workaround for http://pad.lv/1605622
-	rm -rf binary/boot/filesystem.dir/meta
+	$(SUDO) rm -rf binary/boot/filesystem.dir/meta
 	# make sure /tmp in the snap is mode 1777
-	chmod 1777 binary/boot/filesystem.dir/tmp
-	mv binary/boot/filesystem.dir/* $(DESTDIR)/
+	$(SUDO) chmod 1777 binary/boot/filesystem.dir/tmp
+	$(SUDO) mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	# only copy the manifest file if we are in a launchpad buildd
 	if [ -e /build/core ]; then \
 	  mv livecd.ubuntu-core.manifest /build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH).manifest; \
