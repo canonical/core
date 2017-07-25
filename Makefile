@@ -18,8 +18,8 @@ all: check
 	# livecd-rootfs package to config/hooks/, we want to maintain these
 	# hooks in the github tree instead, so remove the ones from the
 	# package and put ours in place instead.
-	rm -f config/hooks/*
-	cp -a live-build/hooks/* config/hooks/
+	$(SUDO) rm -f config/hooks/*
+	$(SUDO) cp -a live-build/hooks/* config/hooks/
 	$(ENV) lb build
 
 install:
@@ -31,7 +31,7 @@ install:
 	$(SUDO) mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	# only copy the manifest file if we are in a launchpad buildd
 	if [ -e /build/core ]; then \
-	  mv livecd.ubuntu-core.manifest /build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH).manifest; \
+	  $(SUDO) mv livecd.ubuntu-core.manifest /build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH).manifest; \
 	  ls -l /build/core; \
 	fi
 
