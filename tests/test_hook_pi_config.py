@@ -1,8 +1,23 @@
+# Copyright (C) 2017 Canonical Ltd
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 3 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import shutil
 import subprocess
 import tempfile
-import unittest
+
+from .test_configure import ConfigureTestCase
 
 mock_config_txt = """
 # For more options and information see
@@ -19,7 +34,7 @@ mock_config_txt = """
 unrelated_options=are-keept
 """
 
-class TestPiConfigFromConfigureHook(unittest.TestCase):
+class TestPiConfigFromConfigureHook(ConfigureTestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, self.tmp)
@@ -32,17 +47,6 @@ class TestPiConfigFromConfigureHook(unittest.TestCase):
         with open(self.mock_uboot_config, "w") as fp:
             fp.write(txt)
         os.environ["TEST_UBOOT_CONFIG"]=self.mock_uboot_config
-
-    def mock_binary(self, basename, script):
-        mocked_binary=os.path.join(self.tmp, basename)
-        if not self.tmp in os.environ["PATH"]:
-            os.environ["PATH"] = self.tmp+":"+os.environ["PATH"]
-        with open(mocked_binary, "w") as fp:
-            fp.write("#!/bin/sh\n%s\n" % script)
-        os.chmod(mocked_binary, 0o755)
-
-    def mock_snapctl(self, k, v):
-        self.mock_binary("snapctl", """if [ "$1" = "get" ] && [ "$2" = "%s" ]; then echo "%s"; fi""" % (k, v))
 
     def read_mock_uboot_config(self):
         with open(self.mock_uboot_config) as fp:
