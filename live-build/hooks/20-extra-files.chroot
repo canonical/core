@@ -9,3 +9,9 @@ mkdir -p /lib/firmware
 mkdir -p /writable
 mkdir -p /var/lib/systemd/rfkill
 touch /etc/machine-id
+
+echo "creating fontconfig mount points" >&2
+mkdir -p /etc/fonts
+mkdir -p /usr/share/fonts
+mkdir -p /usr/local/share/fonts
+mkdir -p /var/cache/fontconfig
