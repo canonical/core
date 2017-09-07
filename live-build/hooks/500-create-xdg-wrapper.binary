@@ -9,7 +9,10 @@ PREFIX=binary/boot/filesystem.dir
 mkdir -p $PREFIX/usr/bin
 cat >$PREFIX/usr/bin/xdg-open <<EOF
 #!/bin/sh
-dbus-send --print-reply --session --dest=com.canonical.SafeLauncher / com.canonical.SafeLauncher.OpenURL string:"\$1"
+if ! dbus-send --print-reply --session --dest=io.snapcraft.Launcher / io.snapcraft.Launcher.OpenURL string:"\$1"; then
+   # compat
+   dbus-send --print-reply --session --dest=com.canonial.SafeLauncher / com.canonical.SafeLauncher.OpenURL string:"\$1"
+fi
 EOF
 chmod 755 $PREFIX/usr/bin/xdg-open
 
