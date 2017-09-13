@@ -9,7 +9,7 @@ PREFIX=binary/boot/filesystem.dir
 mkdir -p $PREFIX/usr/bin
 cat >$PREFIX/usr/bin/xdg-open <<EOF
 #!/bin/sh
-if ! dbus-send --print-reply --session --dest=io.snapcraft.Launcher / io.snapcraft.Launcher.OpenURL string:"\$1"; then
+if ! dbus-send --print-reply --session --dest=io.snapcraft.Launcher /io/snapcraft/Launcher io.snapcraft.Launcher.OpenURL string:"\$1"; then
    # compat
    dbus-send --print-reply --session --dest=com.canonial.SafeLauncher / com.canonical.SafeLauncher.OpenURL string:"\$1"
 fi
