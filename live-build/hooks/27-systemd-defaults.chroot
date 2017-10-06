@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+# Fix default handling of secondary interfaces, see LP: #1721223 for
+# details.
+echo "Setting up sysctl.d defaults to fix LP: #1721223"
+cat >> /etc/sysctl.conf <<EOF
+
+# Promote secondary addresses when the primary address is removed
+net.ipv4.conf.default.promote_secondaries = 1
+net.ipv4.conf.all.promote_secondaries = 1
+EOF
