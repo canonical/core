@@ -39,4 +39,3 @@ check:
 	# exlucde "useless cat" from checks, while useless also makes
 	# some things more readable
 	shellcheck -e SC2002 hooks/* live-build/hooks/*
-	python3 -m unittest
