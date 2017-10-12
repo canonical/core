@@ -52,7 +52,10 @@ switch_service() {
 		false)
 			# When the unit is already enabled but not active a call with
 			# --now does start the unit so we have to check for that  case
-			# and explicitly start the unit.
+		        # and explicitly start the unit.
+                        if systemctl status "$2.service"|grep -q "Loaded: masked"; then
+                                systemctl unmask "$2.service"
+                        fi
 			if [ "$(systemctl is-enabled "$2.service")" = "disabled" ]; then
 				systemctl enable "$2.service"
 			fi
@@ -66,6 +69,12 @@ switch_service() {
 			# in two steps here and disable first and then stopping the
 			# service unit.
 			systemctl disable "$2.service"
+                        # we need to mask the unit so that there is a symlink
+                        # with the service name in /etc/systemd/system. If
+                        # there is nothing the "writable-path" magic will
+                        # copy the "$2.service" symlink on boot because the
+                        # directory /etc/systemd/system is "synced"
+			systemctl mask "$2.service"
 			systemctl stop "$2.service"
 			;;
 		*)
