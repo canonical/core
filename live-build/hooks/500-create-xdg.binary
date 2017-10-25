@@ -46,11 +46,11 @@ cat >$PREFIX/usr/bin/xdg-settings <<'EOF'
 #!/bin/sh
 
 if [ "$1" = "get" ]; then
-   dbus-send --print-reply --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Get string:"$2" string:"$3"
-elif [ "$1" = "get" ]; then
-   dbus-send --print-reply --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Check string:"$2" string:"$3" string:"$4"
+   dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Get string:"$2"
+elif [ "$1" = "check" ]; then
+   dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Check string:"$2" string:"$3"
 elif [ "$1" = "set" ]; then
-   dbus-send --print-reply --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Set string:"$2" string:"$3" string:"$4"
+   dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Set string:"$2" string:"$3"
 else
    echo "unknown action "$2"
 fi
