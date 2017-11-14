@@ -18,14 +18,14 @@ TIMEDATECTL=/usr/bin/timedatectl.real
 
 case $1 in
     set-timezone)
-        $TIMEDATECTL set-timezone $2
+        $TIMEDATECTL set-timezone "$2"
         # make a .tmp link and mv it to have "kind of" atomic
         # writing here in case of a power loss midway through
-        ln -s /usr/share/zoneinfo/$2 /etc/writable/localtime.tmp
+        ln -s /usr/share/zoneinfo/"$2" /etc/writable/localtime.tmp
         mv /etc/writable/localtime.tmp /etc/writable/localtime
         ;;
     *)
-        $TIMEDATECTL $@
+        $TIMEDATECTL "$@"
         ;;
 esac
 EOF
