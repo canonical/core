@@ -56,7 +56,7 @@ elif [ "$1" = "check" ]; then
 elif [ "$1" = "set" ]; then
    dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Set string:"$2" string:"$3" | cut -b4-
 else
-   echo "unknown action "$2"
+   echo "unknown action $2"
 fi
 EOF
 chmod 755 $PREFIX/usr/bin/xdg-settings
