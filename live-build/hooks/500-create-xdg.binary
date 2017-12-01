@@ -45,6 +45,8 @@ EOF
 cat >$PREFIX/usr/bin/xdg-settings <<'EOF'
 #!/bin/sh
 #
+set -e
+
 # we need to add a "cut -b4-" everyhwere because
 # `dbus-send --print-reply=literal` indents the output by 3 spaces
 # (hardcoded in dbus-print-message.c:print_iter)
