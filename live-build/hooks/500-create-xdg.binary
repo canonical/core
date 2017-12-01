@@ -45,6 +45,8 @@ EOF
 cat >$PREFIX/usr/bin/xdg-settings <<'EOF'
 #!/bin/sh
 #
+set -e
+
 # we need to add a "cut -b4-" everyhwere because
 # `dbus-send --print-reply=literal` indents the output by 3 spaces
 # (hardcoded in dbus-print-message.c:print_iter)
@@ -54,7 +56,8 @@ if [ "$1" = "get" ]; then
 elif [ "$1" = "check" ]; then
    dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Check string:"$2" string:"$3" | cut -b4-
 elif [ "$1" = "set" ]; then
-   dbus-send --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Set string:"$2" string:"$3" | cut -b4-
+   # timeout of 300s to ensure the user has enough time to make a decision
+   dbus-send --reply-timeout=300000 --print-reply=literal --session --dest=io.snapcraft.Settings /io/snapcraft/Settings io.snapcraft.Settings.Set string:"$2" string:"$3" | cut -b4-
 else
    echo "unknown action $2"
 fi
