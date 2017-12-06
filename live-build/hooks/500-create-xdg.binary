@@ -43,9 +43,10 @@ x-scheme-handler/help=xdg-open.desktop
 EOF
 
 cat >$PREFIX/usr/bin/xdg-settings <<'EOF'
-#!/bin/sh
+#!/bin/bash
 #
 set -e
+set -o pipefail
 
 # we need to add a "cut -b4-" everyhwere because
 # `dbus-send --print-reply=literal` indents the output by 3 spaces
