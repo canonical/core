@@ -20,7 +20,8 @@ sha1sum /boot/initrd.img-core >/var/lib/initramfs-tools/core
 
 # for snapcraft backwards compatibility
 mkdir -p /usr/lib/ubuntu-core-generic-initrd
-for f in /boot/initrd.img*; do
+mv /boot/initrd.img-core* /usr/lib/ubuntu-core-generic-initrd/ 
+for f in /usr/lib/ubuntu-core-generic-initrd/initrd.img* ; do
     # use relative path as this is inside the core snap which may be relocated
-    ln -s ../../../boot/"$(basename "$f")" /usr/lib/ubuntu-core-generic-initrd/
+    ln -s ../usr/lib/ubuntu-core-generic-initrd/"$(basename "$f")" /boot/
 done
