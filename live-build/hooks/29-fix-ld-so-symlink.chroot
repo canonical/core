@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+echo "Making the /lib64/ld-linux-x86-64.so.2 symlink relative"
+if [ "$(readlink -f /lib64/ld-linux-x86-64.so.2)" = "/lib/x86_64-linux-gnu/ld-2.23.so" ]; then
+    # we must do it in one go (-f) because everything dynamically linked
+    # on the system is  broken when /lib/x86_64-linux-gnu/ld-2.23.so is
+    # missing
+    ln -f -s ../lib/x86_64-linux-gnu/ld-2.23.so /lib64/ld-linux-x86-64.so.2
+fi
