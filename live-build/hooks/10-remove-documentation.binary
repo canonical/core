@@ -1,8 +1,8 @@
 #!/bin/sh -x
 
 echo "I: Remove unneeded files from /usr/share/doc "
-find binary/boot/filesystem.dir/usr/share/doc -print0 -depth -type f ! -name copyright|xargs -0 rm -f || true
-find binary/boot/filesystem.dir/usr/share/doc -print0 -empty|xargs -0 rmdir || true
+find binary/boot/filesystem.dir/usr/share/doc -depth -type f ! -name copyright  -print0 | xargs -0 rm -f || true
+find binary/boot/filesystem.dir/usr/share/doc -empty  -print0 | xargs -0 rmdir || true
 find binary/boot/filesystem.dir/usr/share/doc -type f -exec gzip -9 {} \;
 
 echo "I: Remove man/info pages"
@@ -15,7 +15,7 @@ rm -rf binary/boot/filesystem.dir/usr/share/man \
     
 
 echo "I: Removing /var/lib/apt/lists/*"
-find binary/boot/filesystem.dir/var/lib/apt/lists/ -print0 -type f | xargs -0 rm -f
+find binary/boot/filesystem.dir/var/lib/apt/lists/ -type f -print0 | xargs -0 rm -f
 
 echo "I: Removing /var/cache/apt/*.bin"
 rm -f binary/boot/filesystem.dir/var/cache/apt/*.bin
