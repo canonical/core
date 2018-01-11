@@ -14,7 +14,7 @@ if [ "$(dpkg --print-architecture)" = "amd64" ]; then
     apt-get -y install libc6:i386
 
     echo "I: Removing /var/lib/apt/lists/*"
-    find /var/lib/apt/lists/ -print0 -type f | xargs -0 rm -f
+    find /var/lib/apt/lists/ -type f -print0 | xargs -0 rm -f
 
     echo "I: Removing /var/cache/apt/*.bin"
     rm -f /var/cache/apt/*.bin
