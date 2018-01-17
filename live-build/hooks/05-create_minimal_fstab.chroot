@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -ex
 
 cat >>/etc/fstab<<EOT
 # Minimal setup required for systemd to provide a r/w FS

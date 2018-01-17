@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -ex
 
 # Boot using systemd and disable quiet boot
 # to see what is happening.

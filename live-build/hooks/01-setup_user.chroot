@@ -1,6 +1,4 @@
-#!/bin/sh -x
-
-set -e
+#!/bin/sh -ex
 
 # There is no default user anymore, console-conf is responsible
 # for creating one

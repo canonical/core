@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -ex
 
 cat >/etc/motd<<EOF
 Welcome to Snappy Ubuntu Core, a transactionally updated Ubuntu.

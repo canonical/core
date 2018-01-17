@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 # Fix default handling of secondary interfaces, see LP: #1721223 for
 # details.

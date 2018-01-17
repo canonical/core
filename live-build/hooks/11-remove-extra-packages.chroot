@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 # we want a really minimal image
 apt-get purge -y locales

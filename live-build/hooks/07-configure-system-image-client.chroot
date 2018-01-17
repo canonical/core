@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -ex
 
 # Change default cache partition (until LP: #1373467 is fixed).
 if [ -f /etc/system-image/client.ini ]; then

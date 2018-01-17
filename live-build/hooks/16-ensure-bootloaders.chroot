@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 mkdir -p /boot/uboot
 cat > /etc/fw_env.config <<EOF

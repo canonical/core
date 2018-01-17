@@ -1,8 +1,6 @@
-#!/bin/sh
+#!/bin/sh -ex
 #
 # create hostfs entry
-
-set -ex
 
 echo "I: Adding var/lib/snapd/hostfs"
 

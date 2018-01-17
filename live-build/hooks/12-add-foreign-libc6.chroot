@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -ex
+#!/bin/sh -ex
 
 echo "I: Checking if we are amd64 and libc6:i386 should be installed"
 
