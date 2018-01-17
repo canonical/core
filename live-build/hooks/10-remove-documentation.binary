@@ -1,7 +1,7 @@
 #!/bin/sh -x
 
 echo "I: Remove unneeded files from /usr/share/doc "
-find binary/boot/filesystem.dir/usr/share/doc -depth -type f ! -name copyright  -print0 | xargs -0 rm -f || true
+find binary/boot/filesystem.dir/usr/share/doc -depth -type f ! -name copyright ! -name changelog.gz ! -name changelog.Debian.gz  -print0 | xargs -0 rm -f || true
 find binary/boot/filesystem.dir/usr/share/doc -empty  -print0 | xargs -0 rmdir || true
 find binary/boot/filesystem.dir/usr/share/doc -type f -exec gzip -9 {} \;
 
