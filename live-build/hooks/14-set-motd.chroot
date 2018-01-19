@@ -1,12 +1,20 @@
 #!/bin/sh
 
 cat >/etc/motd<<EOF
-Welcome to Snappy Ubuntu Core, a transactionally updated Ubuntu.
 
- * See https://ubuntu.com/snappy
+Welcome to Ubuntu Core, a transactionally updated Ubuntu.
 
-It's a brave new world here in Snappy Ubuntu Core! This machine
-does not use apt-get or deb packages. Please see 'snap --help'
-for app installation and transactional updates.
+ * Ubuntu Core:    https://www.ubuntu.com/core
+ * Documentation:  https://developer.ubuntu.com/core
+
+ * Snaps:          https://snapcraft.io
+ * Support:        https://forum.snapcraft.io
+
+It's a brave new world here in Ubuntu Core! This machine does
+not use apt-get or deb packages. Please see 'snap --help' for
+app installation and transactional updates.
 
 EOF
+
+# remove update-motd bits which clash with /etc/motd content
+rm /etc/update-motd.d/*
