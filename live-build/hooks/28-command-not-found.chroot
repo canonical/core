@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+# integrate the new `snap advice-command` into command_not_found_handle
+echo "Setting up command_not_found_handle"
+cat >> /usr/lib/command-not-found <<EOF
+#!/bin/sh
+exec snap advise-command "$@"
+EOF
+chmod +x /usr/lib/command-not-found
+
