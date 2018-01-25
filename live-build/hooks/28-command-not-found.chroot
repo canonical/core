@@ -4,7 +4,7 @@ set -e
 
 SNAPD_VER=$(cut -f2 -d= /usr/lib/snapd/info)
 if dpkg --compare-version "$SNAPD_VER" lt 2.30+git; then
-    echo "building for a version that does not support `snap adsive-command` yet"
+    echo "building for a version that does not support 'snap adsive-command' yet"
     exit 0
 fi
 
