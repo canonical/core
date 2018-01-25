@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 mv /usr/bin/timedatectl /usr/bin/timedatectl.real
 

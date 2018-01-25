@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 # Ensure cloud-init runs after networkd-wait-online.service since Ubuntu Core uses networkd
 CI_SERVICE=/lib/systemd/system/cloud-init.service

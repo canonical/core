@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -ex
 
 # bug #1637611
 echo "turning /etc/profile.d/Z99-cloud-locale-test.sh into a no-op"

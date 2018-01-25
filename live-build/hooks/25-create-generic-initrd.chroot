@@ -1,6 +1,4 @@
-#! /bin/sh
-
-set -ex
+#! /bin/sh -ex
 
 IVER="$(dpkg -s initramfs-tools-ubuntu-core | \
 			sed -n '/^Version:/{s/^[^: ]*: \([^: ]*\).*/\1/;p;}')"

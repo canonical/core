@@ -1,8 +1,6 @@
-#!/bin/sh
+#!/bin/sh -ex
 #
 # removing debian packaging artifacts
-
-set -ex
 
 echo "I: Removing the debian legacy"
 

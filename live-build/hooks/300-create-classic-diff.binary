@@ -1,8 +1,6 @@
-#! /bin/sh
+#! /bin/sh -ex
 #
 # create delta tarball for classic shell
-
-set -ex
 
 echo "I: Creating delta tarball for use with classic shell"
 

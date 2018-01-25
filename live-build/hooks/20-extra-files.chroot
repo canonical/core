@@ -1,6 +1,4 @@
-#! /bin/sh
-
-set -e
+#! /bin/sh -ex
 
 echo "creating mtab and modules dir" >&2
 ln -sf ../proc/self/mounts /etc/mtab

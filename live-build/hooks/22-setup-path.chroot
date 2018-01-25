@@ -1,6 +1,4 @@
-#!/bin/sh -x
-
-set -e
+#!/bin/sh -ex
 
 # Fix the PATH to also contain /snap/bin for non-interactive
 # ssh shells LP: #1659719
