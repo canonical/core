@@ -4,4 +4,4 @@ echo "Setting snapd.core-fixup.service symlink"
 ln -s /lib/systemd/system/snapd.core-fixup.service /lib/systemd/system/multi-user.target.wants/snapd.core-fixup.service
 
 echo "Setting snap-repair.timer symlink"
-ln -s /lib/systemd/system/snap-repair.timer /lib/systemd/system/timers.target.wants/snap-repair.timer
+ln -s /lib/systemd/system/snapd.snap-repair.timer /lib/systemd/system/timers.target.wants/snapd.snap-repair.timer
