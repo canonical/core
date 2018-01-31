@@ -9,4 +9,4 @@ if dpkg --compare-version "$SNAPD_VER" lt 2.30+git; then
 fi
 
 # integrate the new `snap advice-command` into command_not_found_handle
-ln -s /usr/bin/snap /usr/bin/command-not-found
+ln -s /usr/bin/snap /usr/lib/command-not-found
