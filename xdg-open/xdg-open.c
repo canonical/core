@@ -41,13 +41,14 @@ int main(int argc, char **argv)
         // fd_list takes ownership of the file descriptor
         g_autoptr(GUnixFDList) fd_list = g_unix_fd_list_new_from_array(&fd, 1);
         fd = -1;
-        const int fd_index = 0;
 
+        const char *parent_window = "";
+        const int fd_index = 0;
         result = g_dbus_connection_call_with_unix_fd_list_sync(
             bus,
             "io.snapcraft.Launcher", "/io/snapcraft/Launcher",
             "io.snapcraft.Launcher", "OpenFile",
-            g_variant_new("(h)", fd_index), NULL,
+            g_variant_new("(sh)", parent_window, fd_index), NULL,
             G_DBUS_CALL_FLAGS_NONE, -1, fd_list, NULL, NULL, &error);
     } else {
         g_autofree char *uri = g_file_get_uri(file);
