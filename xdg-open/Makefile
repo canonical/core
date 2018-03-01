@@ -14,7 +14,7 @@ xdg-open: xdg-open.o
 	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 install: all
-	$(INSTALL) -d $(DESTDIR)/usr/bin $(DESTDIR)/usr/share/applications
+	$(INSTALL) -m 755 -d $(DESTDIR)/usr/bin $(DESTDIR)/usr/share/applications
 	$(INSTALL) -m 755 -s xdg-open $(DESTDIR)/usr/bin
 	$(INSTALL) -m 644 xdg-open.desktop $(DESTDIR)/usr/share/applications
 	$(INSTALL) -m 644 mimeapps.list $(DESTDIR)/usr/share/applications
