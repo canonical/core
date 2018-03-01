@@ -31,3 +31,11 @@ parts:
       - livecd-rootfs
       - shellcheck
       - gawk
+
+  xdg-open:
+    source: xdg-open
+    plugin: make
+    build-packages:
+      - gcc
+      - pkg-config
+      - libglib2.0-dev
