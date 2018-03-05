@@ -39,3 +39,7 @@ parts:
       - gcc
       - pkg-config
       - libglib2.0-dev
+
+  extra-files:
+    source: extra-files
+    plugin: dump
