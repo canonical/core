@@ -5,7 +5,7 @@ echo "I: Creating xdg helper"
 PREFIX=binary/boot/filesystem.dir
 
 mkdir -p $PREFIX/usr/bin
-cat >$PREFIX/usr/bin/xdg-open <<EOF
+cat >$PREFIX/usr/bin/xdg-open <<'EOF'
 #!/bin/sh
 exec snapctl user-open "$@"
 EOF
