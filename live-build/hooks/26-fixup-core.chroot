@@ -5,3 +5,7 @@ ln -s /lib/systemd/system/snapd.core-fixup.service /lib/systemd/system/multi-use
 
 echo "Setting snap-repair.timer symlink"
 ln -s /lib/systemd/system/snapd.snap-repair.timer /lib/systemd/system/timers.target.wants/snapd.snap-repair.timer
+
+echo "Creating compat copy of snappy-app-dev"
+rm -f /lib/udev/snappy-app-dev
+cp -a /usr/lib/snapd/snap-device-helper /lib/udev/snappy-app-dev
