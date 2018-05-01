@@ -24,6 +24,14 @@ parts:
     organize:
       configure: meta/hooks/configure
 
+  manifest:
+    plugin: dump
+    source: manifest-fixup
+    stage:
+      - update-stage-pkgs.py
+    prime:
+      - -update-stage-pkgs.py
+
   livebuild:
     source: .
     plugin: make
@@ -31,3 +39,15 @@ parts:
       - livecd-rootfs
       - shellcheck
       - gawk
+      - python3-yaml
+    after:
+      - hooks
+      - manifest
+    override-prime: |
+      ls -al $(pwd)/..
+      ls -al $SNAPCRAFT_STAGE
+      ls -al snap/
+      snapcraftctl prime
+      ls -al snap/
+      ls -al $(pwd)
+      python3 $SNAPCRAFT_STAGE/update-stage-pkgs.py $(pwd)/../
