@@ -9,13 +9,8 @@ confinement: strict
 type: os
 grade: stable
 
-plugs:
-  core-support-plug:
-    interface: core-support
-
 hooks:
   configure:
-    plugs: [core-support-plug]
 
 parts:
   hooks:
