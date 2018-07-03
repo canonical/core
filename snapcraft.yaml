@@ -9,9 +9,6 @@ confinement: strict
 type: os
 grade: stable
 
-hooks:
-  configure:
-
 parts:
   hooks:
     plugin: dump
