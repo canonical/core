@@ -8,7 +8,14 @@ set -e
 # /usr/bin/pager -> /etc/alternatives/pager -> /bin/more
 #
 find /etc/alternatives -type l | while read -r f; do
-    real=$(readlink -f "$f")
+    # do not use "-f" here to avoid resolving too much, e.g. there is:
+    #    /usr/bin/x-www-browser ->
+    #    /etc/alternatives/x-www-browser ->
+    #    /usr/bin/firefox ->
+    #    ../lib/firefox/firefox.sh
+    # but here we only want to resolv to /usr/bin/firefox not all the
+    # way to the symlink that /usr/bin/firefox points to.
+    real=$(readlink "$f")
     alias=$(dirname "$real")/$(basename "$f")
     rm -f "$alias"
     ln -s "$real" "$alias"
