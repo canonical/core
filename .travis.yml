@@ -4,7 +4,7 @@ python:
 dist: xenial
 env:
   global:
-    - URL=http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-amd64.tar.gz
+    - URL=http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04-core-amd64.tar.gz
     - CHROOT=xenial-test-chroot
     - LC_ALL=C.UTF-8
     - LANG=C.UTF-8
