@@ -128,7 +128,7 @@ if [ -n "$powerkey" ]; then
     switch_handle_power_key "$powerkey"
 fi
 
-PI_CONFIG_KEYS="disable_overscan framebuffer_width framebuffer_height
+PI_CONFIG_KEYS="disable_overscan framebuffer_width force_turbo framebuffer_height
  framebuffer_depth framebuffer_ignore_alpha overscan_left overscan_right
  overscan_top overscan_bottom overscan_scale display_rotate hdmi_group
  hdmi_mode hdmi_drive avoid_warnings gpu_mem_256 gpu_mem_512 gpu_mem
