@@ -37,7 +37,7 @@ parts:
   # patches for fontconfig
   patches:
     plugin: dump
-    source: ./snap/patches
+    source: fontconfig-patches
     prime:
       - -*
   # the version in Ubuntu 16.04 (cache v6)
