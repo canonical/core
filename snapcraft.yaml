@@ -34,68 +34,24 @@ parts:
       - shellcheck
       - gawk
 
-  # patches for fontconfig
-  patches:
-    plugin: dump
-    source: fontconfig-patches
-    prime:
-      - -*
+
   # the version in Ubuntu 16.04 (cache v6)
-  fontconfig-2.11.94:
-    plugin: autotools
-    configflags: [--enable-static]
-    source: https://gitlab.freedesktop.org/fontconfig/fontconfig
-    source-type: git
-    source-tag: 2.11.94
-    prepare: |
-      ./autogen.sh
-      patch -p1 < $SNAPCRAFT_STAGE/2.11.94-glibc2.25-build-fix.patch
-      patch -p1 < $SNAPCRAFT_STAGE/2.11.94-locale_c.utf-8.patch
-      patch -p1 < $SNAPCRAFT_STAGE/2.11.94-CVE-2016-5384.patch
-      patch -p1 < $SNAPCRAFT_STAGE/2.11.94-gperf3.1.patch
+  fontconfig-xenial:
+    plugin: nil
+    source: fc/
     build: |
-      snapcraftctl build
-      # we only want the mostly static fc-cache - build and install it
-      TRIPLET=$(dpkg-architecture -qDEB_HOST_GNU_TYPE)
-      cd fc-cache
-      ../libtool  --tag=CC   --mode=link gcc   -g -O2 -pthread   -o fc-cache fc-cache.o ../src/.libs/libfontconfig.a /usr/lib/$TRIPLET/libfreetype.a /usr/lib/$TRIPLET/libexpat.a /usr/lib/$TRIPLET/libpng.a -lz -lm
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
-      cp -a fc-cache $SNAPCRAFT_PART_INSTALL/bin/fc-cache-v6
-    after: [patches]
+      ./build-from-security.py xenial
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp -a fc-cache-xenial $SNAPCRAFT_PART_INSTALL/bin/fc-cache-v6
     stage:
       - bin/fc-cache-v6
-    build-packages:
-      - gperf
-      - libfreetype6-dev
-      - libexpat1-dev
-      - pkg-config
-      - python-lxml
-      - python3-lxml
   # the version in Ubuntu 18.04 (cache v7)
-  fontconfig-2.12.6:
-    plugin: autotools
-    configflags: [--enable-static]
-    source: https://gitlab.freedesktop.org/fontconfig/fontconfig
-    source-type: git
-    source-tag: 2.12.6
-    prepare: |
-      ./autogen.sh
-      patch -p1 < $SNAPCRAFT_STAGE/2.12.6-cache-If-nsec-is-zero.patch
+  fontconfig-bionic:
+    plugin: nil
+    source: fc/
     build: |
-      snapcraftctl build
-      # we only want the mostly static fc-cache - build and install it
-      TRIPLET=$(dpkg-architecture -qDEB_HOST_GNU_TYPE)
-      cd fc-cache
-      ../libtool  --tag=CC   --mode=link gcc   -g -O2 -pthread   -o fc-cache fc-cache.o ../src/.libs/libfontconfig.a /usr/lib/$TRIPLET/libfreetype.a /usr/lib/$TRIPLET/libexpat.a /usr/lib/$TRIPLET/libpng.a -lz -lm
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
-      cp -a fc-cache $SNAPCRAFT_PART_INSTALL/bin/fc-cache-v7
-    after: [patches]
+      ./build-from-security.py bionic
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp -a fc-cache-bionic $SNAPCRAFT_PART_INSTALL/bin/fc-cache-v7
     stage:
       - bin/fc-cache-v7
-    build-packages:
-      - gperf
-      - libfreetype6-dev
-      - libexpat1-dev
-      - pkg-config
-      - python-lxml
-      - python3-lxml
