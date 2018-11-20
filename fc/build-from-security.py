@@ -56,7 +56,6 @@ def build_fontconfig(release):
             shutil.copy(p, os.path.join(pkgsrcdir, "debian", "patches"))
             subprocess.call("echo {} >> {}/debian/patches/series".format(os.path.basename(p), pkgsrcdir), shell=True)
     # do the normal build first
-    subprocess.check_call(["sudo", "apt-get", "install", "-y", "build-essential"])
     subprocess.check_call(["sudo", "apt-get", "-y", "build-dep", pkgsrcdir])
     subprocess.check_call(["dpkg-buildpackage", "-uc"], cwd=pkgsrcdir)
     triplet=subprocess.check_output(["dpkg-architecture", "-qDEB_HOST_MULTIARCH"]).decode().strip()
@@ -69,5 +68,6 @@ def build_fontconfig(release):
 
 if __name__ == "__main__":
     release = sys.argv[1]
+    subprocess.check_call(["sudo", "apt-get", "install", "-y", "build-essential"])
     build_fontconfig(release)
     
