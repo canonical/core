@@ -20,7 +20,6 @@ arch_to_base_uri = {
 }
 
 def fetch_source_from_security(release, pkgname):
-    apt.apt_pkg.config.set("Acquire::AllowInsecureRepositories", "1")
     with tempfile.TemporaryDirectory(prefix="aptroot-{}".format(release)) as base:
         sources_list = base+"/etc/apt/sources.list"
         os.makedirs(os.path.dirname(sources_list), exist_ok=True)
@@ -33,10 +32,14 @@ deb {base_uri} {dist}-security main
 deb-src {base_uri} {dist}-security main
         """.format(base_uri=base_uri, dist=release))
 
+        # copy keys in place
+        shutil.copy2("/etc/apt/trusted.gpg", base+"/etc/apt/trusted.gpg")
+        shutil.copytree("/etc/apt/trusted.gpg.d", base+"/etc/apt/trusted.gpg.d")
+        # and create/update cache
         cache = apt.Cache(rootdir=base)
         cache.update(apt.progress.text.AcquireProgress())
         cache.open()
-        # extract source
+        # fetch/extract source (python-apt uses dpkg-source -x interally)
         pkg_src_dir = tempfile.mkdtemp(prefix="{}-{}-src".format(release, pkgname))
         os.makedirs(pkg_src_dir, exist_ok=True)
         pkg = cache["fontconfig"]
