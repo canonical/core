@@ -12,3 +12,7 @@ echo "creating fontconfig mount points" >&2
 mkdir -p /usr/share/fonts
 mkdir -p /usr/local/share/fonts
 mkdir -p /var/cache/fontconfig
+
+# FIXME: this can go once we support non /home dirs directly
+echo "creating jenkins compat home"
+mkdir -p /var/lib/jenkins
