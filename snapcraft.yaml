@@ -38,7 +38,7 @@ parts:
   # the version in Ubuntu 16.04 (cache v6)
   fontconfig-xenial:
     plugin: nil
-    source: fc/
+    source: https://github.com/snapcore/fc-cache-static-builder.git
     build: |
       ./build-from-security.py xenial
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
@@ -48,7 +48,7 @@ parts:
   # the version in Ubuntu 18.04 (cache v7)
   fontconfig-bionic:
     plugin: nil
-    source: fc/
+    source: https://github.com/snapcore/fc-cache-static-builder.git
     build: |
       ./build-from-security.py bionic
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
