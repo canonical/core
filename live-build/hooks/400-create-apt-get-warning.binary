@@ -8,6 +8,7 @@ mkdir -p $PREFIX/usr/local/bin
 cat >$PREFIX/usr/local/bin/no-apt <<EOF
 #!/bin/sh
 echo "Ubuntu Core does not use apt-get, see 'snap --help'!"
+exit 1
 EOF
 chmod 755 $PREFIX/usr/local/bin/no-apt
 

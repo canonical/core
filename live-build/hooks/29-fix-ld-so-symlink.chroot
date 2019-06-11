@@ -9,3 +9,8 @@ if [ "$(readlink -f /lib64/ld-linux-x86-64.so.2)" = "/lib/x86_64-linux-gnu/ld-2.
     # missing
     ln -f -s ../lib/x86_64-linux-gnu/ld-2.23.so /lib64/ld-linux-x86-64.so.2
 fi
+
+echo "Making the /lib64/ld64.so.2 symlink relative"
+if [ "$(readlink -f /lib64/ld64.so.2)" = "/lib/powerpc64le-linux-gnu/ld-2.23.so" ]; then
+    ln -f -s ../lib/powerpc64le-linux-gnu/ld-2.23.so /lib64/ld64.so.2
+fi
