@@ -9,7 +9,7 @@
 # --------------------------------------------------------------------
 
 /home                                   user-data               persistent  transition  none
-/snap                                   auto                    persistent  transition  none
+/snap                                   auto                    persistent  none  none
 /tmp                                    none                    temporary   none        defaults
 /mnt                                    none                    temporary   none        defaults
 /media                                  none                    temporary   none        defaults
