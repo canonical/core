@@ -19,6 +19,6 @@ install:
   - sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
   - sudo chroot $CHROOT apt update
   - sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
-  - sudo cp -a Makefile snapcraft.yaml hooks live-build extra-files fc $CHROOT/build
+  - sudo cp -a Makefile snapcraft.yaml hooks live-build extra-files $CHROOT/build
 script:
   - sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
