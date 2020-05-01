@@ -1,26 +1,27 @@
 DPKG_ARCH := $(shell dpkg --print-architecture)
 RELEASE := $(shell lsb_release -c -s)
 SUDO := sudo
-ENV := $(SUDO) PROJECT=ubuntu-core SUBPROJECT=system-image EXTRA_PPAS='snappy-dev/image snappy-dev/edge' IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
+EXTRA_PPAS := snappy-dev/image
+ENV := $(SUDO) PROJECT=ubuntu-core SUBPROJECT=system-image IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
 
-#ifneq ($(shell grep $(RELEASE)-proposed /etc/apt/sources.list),)
-#ENV += PROPOSED=1
-#endif
+ifneq ($(shell apt-cache policy snapd|grep ppa.launchpad.net/snappy-dev/edge),)
+EXTRA_PPAS += snappy-dev/edge
+endif
 
 all: check
 	mkdir -p auto
 	for f in config build clean; \
 	    do ln -s /usr/share/livecd-rootfs/live-build/auto/$$f auto/; \
 	done
-	$(ENV) lb clean
-	$(ENV) lb config
+	$(ENV) EXTRA_PPAS='$(EXTRA_PPAS)' lb clean
+	$(ENV) EXTRA_PPAS='$(EXTRA_PPAS)' lb config
 	# lb config copies the live-build/ubuntu-core/hooks/ from the
 	# livecd-rootfs package to config/hooks/, we want to maintain these
 	# hooks in the github tree instead, so remove the ones from the
 	# package and put ours in place instead.
 	$(SUDO) rm -f config/hooks/*
 	$(SUDO) cp -a live-build/hooks/* config/hooks/
-	$(ENV) lb build
+	$(ENV) EXTRA_PPAS='$(EXTRA_PPAS)' lb build
 
 install:
 	echo "I: in install target"
