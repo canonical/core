@@ -82,6 +82,7 @@
 # rfkill dir
 /var/lib/systemd/rfkill                 auto                    persistent  transition  none
 # dbus bus policy
+/etc/dbus-1/session.d                   auto                    persistent  transition  none
 /etc/dbus-1/system.d                    auto                    persistent  transition  none
 /etc/modprobe.d                         auto                    synced      none        none
 /etc/ppp                                auto                    persistent  transition  none
