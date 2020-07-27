@@ -1,0 +1,11 @@
+#!/bin/sh -ex
+#
+# delete unnecessary debian configuration file for cloud-init
+
+echo "I: Removing /etc/cloud/cloud.cfg.d/90_dpkg.cfg"
+
+# remove cloud-init file which allows all datasources, eventually we should add
+# a cloud-init configuration which specifies all allowed/known to work/good 
+# datasources, but since snapd will do this automatically after seeding, it's 
+# not critical
+rm /etc/cloud/cloud.cfg.d/90_dpkg.cfg
