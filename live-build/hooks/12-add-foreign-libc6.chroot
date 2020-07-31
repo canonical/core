@@ -1,5 +1,8 @@
 #!/bin/sh -ex
 
+echo "I: Enable finalrd"
+apt-get -y install finalrd
+
 echo "I: Checking if we are amd64 and libc6:i386 should be installed"
 
 if [ "$(dpkg --print-architecture)" = "amd64" ]; then
