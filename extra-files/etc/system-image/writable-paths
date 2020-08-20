@@ -59,6 +59,8 @@
 /etc/systemd/system                     auto                    synced      none        none
 /etc/systemd/user                       auto                    synced      none        none
 /etc/systemd/journald.conf.d            auto                    synced      none        none
+/var/lib/systemd                        auto                    persistent  transition  none
+/var/lib/private/systemd                auto                    persistent  transition  none
 # needed for usb tethering
 /var/lib/misc                           auto                    persistent  transition  none
 # walinuxagent
@@ -77,10 +79,6 @@
 /var/lib/snapd                         auto                     synced      none        none
 # udev
 /etc/udev/rules.d                       auto                    persistent  transition  none
-# random seed
-/var/lib/systemd/random-seed            auto                    persistent  transition  none
-# rfkill dir
-/var/lib/systemd/rfkill                 auto                    persistent  transition  none
 # dbus bus policy
 /etc/dbus-1/session.d                   auto                    persistent  transition  none
 /etc/dbus-1/system.d                    auto                    persistent  transition  none
