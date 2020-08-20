@@ -19,9 +19,3 @@ for f in system user; do
     mkdir -p /etc/systemd/$f.conf.d
 done
 
-# create systemd dirs
-
-echo "creating extra systemd dirs"
-mkdir -p /var/lib/systemd
-mkdir -p /var/lib/private/systemd
-chmod 700 /var/lib/private
