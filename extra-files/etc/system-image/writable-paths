@@ -37,6 +37,8 @@
 # for various clouds like GCE
 /etc/sysctl.d                           auto                    persistent  transition  none
 /etc/default/keyboard                   auto                    persistent  transition  none
+# for wireless regulatory things
+/etc/default/crda                       auto                    persistent  transition  none
 # apparmor cache is not pregenerated in the image builds
 /etc/apparmor.d/cache                   auto                    persistent  none        none
 # needed by apparmor - use transition since some core apps are
