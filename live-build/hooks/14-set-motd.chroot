@@ -22,7 +22,8 @@ EOF
 rm /etc/update-motd.d/10-help-text
 
 # fail if anything in update-motd.d changed so that we can inspect/update
-if [ "$(find /etc/update-motd.d/ -type f | wc -l)" != 2 ]; then
+needle="00-header 50-motd-news"
+if [ "$(find /etc/update-motd.d/ | sort |cut -f4 -d/ | xargs echo)" = "$needle" ]; then
     echo "The /etc/update-motd.d/ directory content changed, please inspect:"
     ls -l /etc/update-motd.d
     exit 1
