@@ -26,6 +26,8 @@ PREFIX=binary/boot/filesystem.dir
         usr/bin/dpkg-trigger \
         usr/bin/dpkg-statoverride \
         usr/bin/dpkg-maintscript-helper
+    # remove ESM tokens, if any
+    rm -f etc/apt/sources.list.d/ubuntu-esm.list
     # remove generated locales for packages we do not use
     rm -f usr/share/locale/*/LC_MESSAGES/dpkg*
     rm -f usr/share/locale/*/LC_MESSAGES/libapt*
