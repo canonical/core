@@ -1,0 +1,34 @@
+name: Tests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: build core in snapcraft
+        run: |
+          export URL=http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.6-base-amd64.tar.gz
+          export CHROOT=xenial-test-chroot
+          export LC_ALL=C.UTF-8
+          export LANG=C.UTF-8
+
+          mkdir -p $CHROOT/build
+          wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
+          sudo cp /etc/resolv.conf $CHROOT/etc/
+          sudo mount --bind /dev $CHROOT/dev
+          sudo chroot $CHROOT apt update
+          sudo chroot $CHROOT apt install -y software-properties-common
+          sudo chroot $CHROOT apt-add-repository -y ppa:snappy-dev/image
+          sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
+          sudo chroot $CHROOT apt update
+          sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
+          sudo cp -a Makefile snapcraft.yaml hooks live-build extra-files $CHROOT/build
+          sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
