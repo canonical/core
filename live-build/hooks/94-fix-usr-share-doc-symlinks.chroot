@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+echo "I: making symlinks in /usr/share/doc predictable"
+# shellcheck disable=SC2016
+find /usr/share/doc -type l \( -name changelog.Debian.gz -o -name NEWS.Debian.gz \) -print0 |
+  xargs -0 -n1 -i sh -c 'cp --remove-destination $(readlink -f "{}") "{}" '
+
