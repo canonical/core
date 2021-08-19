@@ -14,12 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: build core in snapcraft
+        env:
+          URL: http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.6-base-amd64.tar.gz
+          CHROOT: xenial-test-chroot
+          LC_ALL: C.UTF-8
+          LANG: C.UTF-8
         run: |
-          export URL=http://cdimage.ubuntu.com/ubuntu-base/releases/16.04/release/ubuntu-base-16.04.6-base-amd64.tar.gz
-          export CHROOT=xenial-test-chroot
-          export LC_ALL=C.UTF-8
-          export LANG=C.UTF-8
-
           mkdir -p $CHROOT/build
           wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
           sudo cp /etc/resolv.conf $CHROOT/etc/
