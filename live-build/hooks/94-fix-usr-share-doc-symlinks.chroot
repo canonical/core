@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+echo "I: making symlinks in /usr/share/doc predictable"
+# see SC2156
+find /usr/share/doc -type l \( -name changelog.Debian.gz -o -name NEWS.Debian.gz \) \
+    -exec sh -c 'cp --remove-destination $(readlink -f "$1") "$1"' shell {} \;
