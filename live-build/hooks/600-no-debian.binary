@@ -29,7 +29,8 @@ PREFIX=binary/boot/filesystem.dir
 
   # fill in yaml section with all installed packages
   printf 'packages:\n'
-  chroot . dpkg-query -W | awk '{printf "- "}{printf $1}{printf "="}{print $2}'
+  # shellcheck disable=SC2016
+  chroot . dpkg-query -W --showformat='- ${binary:Package}=${Version}\n'
 } > usr/share/snappy/dpkg.yaml
 )
 
