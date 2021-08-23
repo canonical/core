@@ -22,9 +22,12 @@ PREFIX=binary/boot/filesystem.dir
 	    done
 	  done
 	  
-	# fill in yaml section with all installed packages
-	  printf 'packages:\n'
-	  tail -n +6 usr/share/snappy/dpkg.list | awk '{printf "- "}{printf $2}{printf "="}{print $3}'
-	} > usr/share/snappy/dpkg.yaml
+        #first compute where the actual packages start in the dpkg.list file
+        #by getting the header line
+        DPKG_LIST_FILE=usr/share/snappy/dpkg.list
+        pkgs_start=$(( $(awk '/=============================/{ print NR; exit }' $DPKG_LIST_FILE) +1))
+    
+        printf 'packages:\n'
+        tail -n +$pkgs_start $DPKG_LIST_FILE | awk '{printf "- "}{printf $2}{printf "="}{print $3}'
+       } > usr/share/snappy/dpkg.yaml
 )
-
