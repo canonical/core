@@ -30,9 +30,10 @@ install:
 	# make sure /tmp in the snap is mode 1777
 	$(SUDO) chmod 1777 binary/boot/filesystem.dir/tmp
 	$(SUDO) mv binary/boot/filesystem.dir/* $(DESTDIR)/
-	# only copy the manifest file if we are in a launchpad buildd
+	# only copy the manifest and dpkg.yaml files if we are in a launchpad buildd
 	if [ -e /build/core ]; then \
 	  $(SUDO) mv livecd.ubuntu-core.manifest /build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH).manifest; \
+	  $(SUDO) cp usr/share/snappy/dpkg.yaml /build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH).dpkg.yaml; \
 	  ls -l /build/core; \
 	fi
 
