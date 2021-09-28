@@ -20,7 +20,8 @@ jobs:
           LC_ALL: C.UTF-8
           LANG: C.UTF-8
         run: |
-          mkdir -p $CHROOT/build
+          echo "Simulate LP build environment"
+          mkdir -p $CHROOT/build/core
           wget -q -O - $URL | zcat - | sudo tar x -C $CHROOT
           sudo cp /etc/resolv.conf $CHROOT/etc/
           sudo mount --bind /dev $CHROOT/dev
@@ -30,5 +31,5 @@ jobs:
           sudo sed -i '/^deb/s/$/ universe/' $CHROOT/etc/apt/sources.list
           sudo chroot $CHROOT apt update
           sudo chroot $CHROOT apt install -y livecd-rootfs snapcraft
-          sudo cp -a Makefile snapcraft.yaml hooks live-build extra-files $CHROOT/build
-          sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build; snapcraft'
+          sudo cp -a Makefile snapcraft.yaml hooks live-build extra-files $CHROOT/build/core
+          sudo chroot $CHROOT sh -c 'mount -t proc proc /proc; mount -t sysfs sys /sys; cd build/core; snapcraft'
