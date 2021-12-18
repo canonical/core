@@ -2,7 +2,7 @@ name: core
 version: 16-2
 version-script: |
     # remember to keep version script in sync with "Makefile"
-    echo "16-$(cat prime/usr/lib/snapd/info |cut -f2 -d=| sed s/~ubuntu.*// | cut -b1-29)"
+    echo "16-$(grep ^VERSION= prime/usr/lib/snapd/info |cut -f2 -d=| sed s/~ubuntu.*// | cut -b1-29)"
 summary: snapd runtime environment
 description: The core runtime environment for snapd
 confinement: strict
