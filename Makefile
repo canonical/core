@@ -4,7 +4,7 @@ SUDO := sudo
 EXTRA_PPAS := snappy-dev/image
 ENV := $(SUDO) PROJECT=ubuntu-core SUBPROJECT=system-image IMAGEFORMAT=plain SUITE=$(RELEASE) ARCH=$(DPKG_ARCH)
 
-ifneq ($(shell apt-cache policy snapd|grep ppa.launchpad.net/snappy-dev/edge),)
+ifneq ($(shell apt-cache policy snapd|grep -E 'ppa\.launchpad(content)?\.net/snappy-dev/edge'),)
 EXTRA_PPAS += snappy-dev/edge
 endif
 
