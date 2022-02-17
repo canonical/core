@@ -1,7 +1,7 @@
 #!/bin/sh -ex
 
 echo "Ensure the project is build with the ppa:snappy-dev/image PPA"
-if ! apt-cache policy ubuntu-core-config|grep ppa.launchpad.net/snappy-dev/image; then
+if ! apt-cache policy ubuntu-core-config|grep -E 'ppa\.launchpad(content)?\.net/snappy-dev/image'; then
     echo "The ppa:snappy-dev/image PPA is missing."
     echo "This probably means that the build was triggered incorrectly."
     apt-cache policy ubuntu-core-config

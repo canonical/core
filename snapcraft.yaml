@@ -13,7 +13,7 @@ parts:
   check:
     plugin: dump
     override-pull: |
-      if ! apt-cache policy ubuntu-core-config|grep -q ppa.launchpad.net/snappy-dev/image; then
+      if ! apt-cache policy ubuntu-core-config|grep -Eq 'ppa\.launchpad(content)?\.net/snappy-dev/image'; then
           echo "The ppa:snappy-dev/image PPA is missing."
           echo "This probably means that the build was triggered incorrectly."
           apt-cache policy ubuntu-core-config
