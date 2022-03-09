@@ -12,3 +12,6 @@ echo "creating fontconfig mount points" >&2
 mkdir -p /usr/share/fonts
 mkdir -p /usr/local/share/fonts
 mkdir -p /var/cache/fontconfig
+
+# workaround for cups interface to prevent creating writable mimics
+mkdir -p /var/cups
