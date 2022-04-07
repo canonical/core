@@ -35,8 +35,9 @@ PREFIX=binary/boot/filesystem.dir
 )
 
 # dpkg-deb and dpkg purposefully left behind
+# fuse removed because  of https://github.com/snapcore/snapd/pull/11600
 (cd $PREFIX
-    chroot . dpkg --purge --force-depends apt libapt-inst2.0 libapt-pkg5.0 lsb-release
+    chroot . dpkg --purge --force-depends apt libapt-inst2.0 libapt-pkg5.0 lsb-release fuse
     rm -r \
         var/lib/dpkg \
         var/log/apt
