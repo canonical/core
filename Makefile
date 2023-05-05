@@ -32,7 +32,7 @@ install:
 	$(SUDO) mv binary/boot/filesystem.dir/* $(DESTDIR)/
 	# only copy the manifest file if we are in a launchpad buildd
 	set -e ; if [ -e /build/core ]; then \
-	  TARGET_BASENAME=/build/core/core_16-$$(cat $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH); \
+	  TARGET_BASENAME=/build/core/core_16-$$(grep ^VERSION= $(DESTDIR)/usr/lib/snapd/info|cut -f2 -d=|cut -f1 -d~|cut -b1-29)_$(DPKG_ARCH); \
 	  $(SUDO) mv livecd.ubuntu-core.manifest "$${TARGET_BASENAME}".manifest;  \
 	  $(SUDO) cp /build/core/parts/livebuild/install/usr/share/snappy/dpkg.yaml "$${TARGET_BASENAME}".dpkg.yaml; \
 	  ls -lah /build/core; \
