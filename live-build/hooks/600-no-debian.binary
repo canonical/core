@@ -38,6 +38,11 @@ PREFIX=binary/boot/filesystem.dir
 # fuse removed because  of https://github.com/snapcore/snapd/pull/11600
 (cd $PREFIX
     chroot . dpkg --purge --force-depends apt libapt-inst2.0 libapt-pkg5.0 lsb-release fuse
+    # The removal of fuse triggers a call to update-initramfs and a
+    # new initrd file is created, remove it and restore the link to
+    # the initrd created by 25-create-generic-initrd.chroot
+    prev_initrd=$(find boot/ -name 'initrd.img-core-*' -printf "%f")
+    ln -sf "$prev_initrd" boot/initrd.img-core
     rm -r \
         var/lib/dpkg \
         var/log/apt
